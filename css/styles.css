@@ -1,0 +1,171 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: #1a1a2e;
+    font-family: 'Courier New', monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+#gameContainer {
+    position: relative;
+    background: #16213e;
+    border: 3px solid #0f3460;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 52, 96, 0.5);
+}
+
+#gameCanvas {
+    display: block;
+    background: #0e1b2e;
+    border-radius: 7px;
+}
+
+#ui {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    display: flex;
+    justify-content: space-between;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    pointer-events: none;
+}
+
+#towers {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+#towerInfo {
+    position: absolute;
+    top: 80px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    border: 2px solid #0ea5e9;
+    display: none;
+    min-width: 200px;
+}
+
+#upgradeBtn {
+    background: #22c55e;
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: bold;
+    margin-top: 10px;
+    width: 100%;
+}
+
+#upgradeBtn:hover {
+    background: #16a34a;
+}
+
+#upgradeBtn:disabled {
+    background: #6b7280;
+    cursor: not-allowed;
+}
+
+#sellBtn {
+    background: #ef4444;
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: bold;
+    margin-top: 5px;
+    width: 100%;
+}
+
+#sellBtn:hover {
+    background: #dc2626;
+}
+
+.tower-btn {
+    background: linear-gradient(45deg, #0f3460, #16213e);
+    border: 2px solid #0ea5e9;
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: bold;
+    transition: all 0.3s;
+    min-width: 80px;
+    text-align: center;
+}
+
+.tower-btn:hover {
+    background: linear-gradient(45deg, #16213e, #0f3460);
+    border-color: #38bdf8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(14, 165, 233, 0.3);
+}
+
+.tower-btn.selected {
+    background: linear-gradient(45deg, #0ea5e9, #38bdf8);
+    border-color: #7dd3fc;
+}
+
+#gameOver {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    display: none;
+    border: 2px solid #ef4444;
+}
+
+#victory {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    display: none;
+    border: 2px solid #22c55e;
+}
+
+.restart-btn {
+    background: #0ea5e9;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+.restart-btn:hover {
+    background: #0284c7;
+}
