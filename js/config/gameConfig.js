@@ -26,5 +26,40 @@ export const gameConfig = {
     towers: {
         minPlacementDistance: 40,  // Min distance from path
         minTowerDistance: 35       // Min distance between towers
+    },
+    difficulty: {
+        easy: {
+            startGold: 150,
+            startLives: 30,
+            maxWave: 10,
+            enemyHealthMultiplier: 0.8,
+            enemySpeedMultiplier: 0.8,
+            goldMultiplier: 1.2
+        },
+        normal: {
+            startGold: 100,
+            startLives: 20,
+            maxWave: 15,
+            enemyHealthMultiplier: 1,
+            enemySpeedMultiplier: 1,
+            goldMultiplier: 1
+        },
+        hard: {
+            startGold: 75,
+            startLives: 15,
+            maxWave: 20,
+            enemyHealthMultiplier: 1.3,
+            enemySpeedMultiplier: 1.2,
+            goldMultiplier: 0.8
+        },
+        endless: {
+            startGold: 100,
+            startLives: 20,
+            maxWave: Infinity,
+            enemyHealthMultiplier: 1,
+            enemySpeedMultiplier: 1,
+            goldMultiplier: 1,
+            waveScaling: 1.1  // Enemies get 10% stronger each wave
+        }
     }
 };

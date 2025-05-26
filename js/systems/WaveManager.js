@@ -17,7 +17,7 @@ export class WaveManager {
             }
         } else if (gameState.enemies.length === 0) {
             // All enemies defeated, check for victory or next wave
-            if (gameState.wave >= gameConfig.waves.maxWave) {
+            if (gameState.wave >= gameState.maxWave) {
                 gameState.showVictory();
             } else {
                 gameState.nextWave();
@@ -37,7 +37,7 @@ export class WaveManager {
             enemyType = 'boss';
         }
         
-        gameState.enemies.push(new Enemy(enemyType));
+        gameState.enemies.push(new Enemy(enemyType, 0, gameState.difficulty, gameState.wave));
         gameState.enemiesSpawned++;
     }
 }

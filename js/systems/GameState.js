@@ -3,17 +3,31 @@ import { gameConfig } from '../config/gameConfig.js';
 
 export class GameState {
     constructor() {
+        this.difficulty = 'normal';
+        this.isPaused = false;
+        this.gameSpeed = 1; // 1 = normal, 2 = fast, 3 = faster
         this.reset();
     }
     
+    setDifficulty(difficulty) {
+        this.difficulty = difficulty;
+        const diffConfig = gameConfig.difficulty[difficulty];
+        this.maxWave = diffConfig.maxWave;
+    }
+    
     reset() {
-        this.gold = gameConfig.initialState.gold;
-        this.lives = gameConfig.initialState.lives;
+        const diffConfig = gameConfig.difficulty[this.difficulty] || gameConfig.difficulty.normal;
+        
+        this.gold = diffConfig.startGold;
+        this.lives = diffConfig.startLives;
         this.wave = gameConfig.initialState.wave;
         this.score = gameConfig.initialState.score;
+        this.maxWave = diffConfig.maxWave;
         this.selectedTower = null;
         this.selectedTowerObj = null;
         this.gameRunning = true;
+        this.isPaused = false;
+        this.gameSpeed = 1;
         this.enemies = [];
         this.towers = [];
         this.projectiles = [];
@@ -21,6 +35,42 @@ export class GameState {
         this.waveTimer = 0;
         this.enemiesSpawned = 0;
         this.enemiesInWave = gameConfig.waves.enemiesBase;
+    }
+    
+    togglePause() {
+        this.isPaused = !this.isPaused;
+        const overlay = document.getElementById('pauseOverlay');
+        const pauseBtn = document.getElementById('pauseBtn');
+        
+        if (this.isPaused) {
+            overlay.style.display = 'flex';
+            pauseBtn.textContent = '▶️';
+            pauseBtn.classList.add('active');
+        } else {
+            overlay.style.display = 'none';
+            pauseBtn.textContent = '⏸️';
+            pauseBtn.classList.remove('active');
+        }
+    }
+    
+    cycleSpeed() {
+        this.gameSpeed = this.gameSpeed >= 3 ? 1 : this.gameSpeed + 1;
+        const speedBtn = document.getElementById('speedBtn');
+        
+        switch(this.gameSpeed) {
+            case 1:
+                speedBtn.textContent = '⏩';
+                speedBtn.classList.remove('active');
+                break;
+            case 2:
+                speedBtn.textContent = '⏩⏩';
+                speedBtn.classList.add('active');
+                break;
+            case 3:
+                speedBtn.textContent = '⏩⏩⏩';
+                speedBtn.classList.add('active');
+                break;
+        }
     }
     
     updateUI() {
@@ -64,6 +114,12 @@ export class GameState {
         document.getElementById('victoryScore').textContent = this.score;
         document.getElementById('victory').style.display = 'block';
         this.gameRunning = false;
+        
+        // Save best score on victory too
+        const currentBest = parseInt(localStorage.getItem('towerDefenseBestScore') || 0);
+        if (this.score > currentBest) {
+            localStorage.setItem('towerDefenseBestScore', this.score);
+        }
     }
     
     showGameOver() {

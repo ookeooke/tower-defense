@@ -1,3 +1,8 @@
+/* Reset and base styles */
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -16,12 +21,17 @@ body {
     border: 3px solid #0f3460;
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0, 52, 96, 0.5);
+    width: 100%;
+    max-width: 900px;
+    aspect-ratio: 3/2;
 }
 
 #gameCanvas {
     display: block;
     background: #0e1b2e;
     border-radius: 7px;
+    width: 100%;
+    height: 100%;
 }
 
 #ui {
@@ -32,9 +42,69 @@ body {
     display: flex;
     justify-content: space-between;
     color: #fff;
-    font-size: 14px;
+    font-size: clamp(12px, 2vw, 14px);
     font-weight: bold;
     pointer-events: none;
+    z-index: 10;
+}
+
+#gameControls {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
+    gap: 10px;
+    z-index: 15;
+}
+
+.control-btn {
+    background: rgba(15, 52, 96, 0.8);
+    border: 2px solid #0ea5e9;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+    padding: 0;
+}
+
+.control-btn:hover {
+    background: rgba(14, 165, 233, 0.8);
+    transform: scale(1.1);
+}
+
+.control-btn:active {
+    transform: scale(0.95);
+}
+
+.control-btn.active {
+    background: rgba(14, 165, 233, 0.9);
+    border-color: #38bdf8;
+}
+
+#pauseOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+}
+
+#pauseOverlay h2 {
+    color: white;
+    font-size: clamp(24px, 5vw, 48px);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 #towers {
@@ -43,34 +113,43 @@ body {
     left: 10px;
     right: 10px;
     display: flex;
-    gap: 10px;
+    gap: 5px;
     justify-content: center;
+    flex-wrap: wrap;
+    z-index: 10;
 }
 
 #towerInfo {
     position: absolute;
-    top: 80px;
+    top: 60px;
     right: 10px;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.9);
     color: white;
-    padding: 15px;
+    padding: 10px;
     border-radius: 10px;
     border: 2px solid #0ea5e9;
     display: none;
-    min-width: 200px;
+    min-width: 150px;
+    max-width: 200px;
+    font-size: clamp(12px, 2vw, 14px);
+    z-index: 20;
 }
 
-#upgradeBtn {
-    background: #22c55e;
+#upgradeBtn, #sellBtn {
     border: none;
     color: white;
-    padding: 8px 16px;
+    padding: 6px 12px;
     border-radius: 5px;
     cursor: pointer;
     font-family: inherit;
     font-weight: bold;
-    margin-top: 10px;
+    margin-top: 5px;
     width: 100%;
+    font-size: clamp(11px, 1.8vw, 13px);
+}
+
+#upgradeBtn {
+    background: #22c55e;
 }
 
 #upgradeBtn:hover {
@@ -84,15 +163,6 @@ body {
 
 #sellBtn {
     background: #ef4444;
-    border: none;
-    color: white;
-    padding: 8px 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-family: inherit;
-    font-weight: bold;
-    margin-top: 5px;
-    width: 100%;
 }
 
 #sellBtn:hover {
@@ -103,15 +173,17 @@ body {
     background: linear-gradient(45deg, #0f3460, #16213e);
     border: 2px solid #0ea5e9;
     color: #fff;
-    padding: 10px 15px;
+    padding: 8px 10px;
     border-radius: 8px;
     cursor: pointer;
     font-family: inherit;
-    font-size: 12px;
+    font-size: clamp(10px, 1.5vw, 12px);
     font-weight: bold;
     transition: all 0.3s;
-    min-width: 80px;
+    min-width: 70px;
     text-align: center;
+    flex: 1;
+    max-width: 120px;
 }
 
 .tower-btn:hover {
@@ -126,31 +198,27 @@ body {
     border-color: #7dd3fc;
 }
 
-#gameOver {
+#gameOver, #victory {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, 0.9);
+    background: rgba(0, 0, 0, 0.95);
     color: #fff;
-    padding: 30px;
+    padding: 20px;
     border-radius: 15px;
     text-align: center;
     display: none;
+    z-index: 100;
+    min-width: 250px;
+    max-width: 90%;
+}
+
+#gameOver {
     border: 2px solid #ef4444;
 }
 
 #victory {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, 0.9);
-    color: #fff;
-    padding: 30px;
-    border-radius: 15px;
-    text-align: center;
-    display: none;
     border: 2px solid #22c55e;
 }
 
@@ -163,9 +231,186 @@ body {
     cursor: pointer;
     font-family: inherit;
     font-weight: bold;
-    margin-top: 15px;
+    margin: 5px;
+    font-size: clamp(14px, 2.5vw, 16px);
 }
 
 .restart-btn:hover {
     background: #0284c7;
+}
+
+/* Main Menu Styles */
+#mainMenu, #instructions {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.95);
+    color: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    border: 2px solid #0ea5e9;
+    width: 90%;
+    max-width: 400px;
+    max-height: 90vh;
+    overflow-y: auto;
+    z-index: 100;
+}
+
+#mainMenu h1 {
+    font-size: clamp(24px, 5vw, 36px);
+    margin-bottom: 15px;
+    color: #0ea5e9;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+#mainMenu p, #instructions p {
+    font-size: clamp(14px, 2.5vw, 16px);
+    margin-bottom: 20px;
+    color: #94a3b8;
+}
+
+.menu-btn {
+    background: linear-gradient(45deg, #0ea5e9, #38bdf8);
+    border: none;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: bold;
+    font-size: clamp(14px, 2.5vw, 18px);
+    margin: 8px;
+    transition: all 0.3s;
+    width: 80%;
+    max-width: 200px;
+}
+
+.menu-btn:hover {
+    background: linear-gradient(45deg, #0284c7, #0ea5e9);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(14, 165, 233, 0.3);
+}
+
+#difficultySelect {
+    margin: 20px 0;
+}
+
+#difficultySelect label {
+    display: block;
+    margin-bottom: 10px;
+    color: #94a3b8;
+    font-size: clamp(12px, 2vw, 14px);
+}
+
+#difficultySelect select {
+    background: #1e293b;
+    color: white;
+    border: 2px solid #0ea5e9;
+    padding: 8px 16px;
+    border-radius: 5px;
+    font-family: inherit;
+    font-size: clamp(14px, 2.5vw, 16px);
+    cursor: pointer;
+    width: 80%;
+    max-width: 200px;
+}
+
+.game-stats {
+    margin-top: 20px;
+    font-size: clamp(12px, 2vw, 14px);
+    color: #64748b;
+}
+
+#instructions {
+    text-align: left;
+}
+
+#instructions h2 {
+    text-align: center;
+    color: #0ea5e9;
+    font-size: clamp(20px, 4vw, 28px);
+    margin-bottom: 20px;
+}
+
+#instructions ul {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+
+#instructions li {
+    margin: 5px 0;
+    font-size: clamp(12px, 2vw, 14px);
+}
+
+.hide {
+    display: none !important;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    #gameContainer {
+        border-width: 2px;
+        aspect-ratio: 16/10;
+    }
+    
+    #ui {
+        font-size: 12px;
+        gap: 10px;
+    }
+    
+    #gameControls {
+        top: auto;
+        bottom: 60px;
+        gap: 20px;
+    }
+    
+    .control-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+    
+    #towers {
+        bottom: 5px;
+        gap: 3px;
+    }
+    
+    .tower-btn {
+        padding: 6px 8px;
+        font-size: 10px;
+        min-width: 60px;
+    }
+    
+    #towerInfo {
+        top: 50px;
+        right: 5px;
+        padding: 8px;
+        font-size: 11px;
+    }
+    
+    #mainMenu, #instructions {
+        padding: 20px;
+    }
+}
+
+@media (max-height: 600px) {
+    #gameContainer {
+        aspect-ratio: 16/9;
+    }
+    
+    #mainMenu, #instructions {
+        padding: 15px;
+        max-height: 85vh;
+    }
+    
+    .menu-btn {
+        padding: 8px 16px;
+        margin: 5px;
+    }
 }

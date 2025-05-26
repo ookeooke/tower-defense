@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Tower Defense Game</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -10,15 +10,71 @@
     <div id="gameContainer">
         <canvas id="gameCanvas"></canvas>
         
+        <!-- Main Menu -->
+        <div id="mainMenu">
+            <h1>Tower Defense</h1>
+            <p>Defend your base from waves of enemies!</p>
+            
+            <div id="difficultySelect">
+                <label for="difficulty">Select Difficulty:</label>
+                <select id="difficulty">
+                    <option value="easy">Easy - 10 Waves</option>
+                    <option value="normal" selected>Normal - 15 Waves</option>
+                    <option value="hard">Hard - 20 Waves</option>
+                    <option value="endless">Endless Mode</option>
+                </select>
+            </div>
+            
+            <button class="menu-btn" onclick="startNewGame()">Start New Game</button>
+            <button class="menu-btn" onclick="showInstructions()">How to Play</button>
+            
+            <div class="game-stats">
+                <p>Best Score: <span id="bestScore">0</span></p>
+            </div>
+        </div>
+        
+        <!-- Instructions Screen -->
+        <div id="instructions" class="hide">
+            <h2>How to Play</h2>
+            <div style="text-align: left; max-width: 400px; margin: 0 auto;">
+                <p><strong>Objective:</strong> Stop enemies from reaching your base!</p>
+                <br>
+                <p><strong>Controls:</strong></p>
+                <ul>
+                    <li>Click a tower button to select it</li>
+                    <li>Click on the map to place the tower</li>
+                    <li>Click on a tower to upgrade or sell it</li>
+                </ul>
+                <br>
+                <p><strong>Tower Types:</strong></p>
+                <ul>
+                    <li>🔵 Basic - Balanced stats</li>
+                    <li>🟣 Sniper - Long range, slow fire</li>
+                    <li>🟠 Cannon - Area damage</li>
+                    <li>🔷 Ice - Slows enemies</li>
+                </ul>
+            </div>
+            <button class="menu-btn" onclick="hideInstructions()">Back to Menu</button>
+        </div>
+        
         <div id="ui">
-            <div>
-                <div>💰 Gold: <span id="gold">100</span></div>
-                <div>❤️ Lives: <span id="lives">20</span></div>
+            <div style="text-align: left;">
+                <div>💰 <span id="gold">100</span></div>
+                <div>❤️ <span id="lives">20</span></div>
             </div>
-            <div>
-                <div>🌊 Wave: <span id="wave">1</span></div>
-                <div>⚔️ Score: <span id="score">0</span></div>
+            <div style="text-align: right;">
+                <div>🌊 <span id="wave">1</span></div>
+                <div>⚔️ <span id="score">0</span></div>
             </div>
+        </div>
+        
+        <div id="gameControls">
+            <button id="pauseBtn" class="control-btn" title="Pause/Resume">⏸️</button>
+            <button id="speedBtn" class="control-btn" title="Game Speed">⏩</button>
+        </div>
+        
+        <div id="pauseOverlay">
+            <h2>PAUSED</h2>
         </div>
         
         <div id="towerInfo">
@@ -33,16 +89,20 @@
         
         <div id="towers">
             <button class="tower-btn" data-tower="basic">
-                Basic Tower<br>💰25 - 🎯Med
+                <div>Basic</div>
+                <div style="font-size: 0.9em;">💰25</div>
             </button>
             <button class="tower-btn" data-tower="sniper">
-                Sniper Tower<br>💰50 - 🎯Long
+                <div>Sniper</div>
+                <div style="font-size: 0.9em;">💰50</div>
             </button>
             <button class="tower-btn" data-tower="cannon">
-                Cannon Tower<br>💰75 - 💥Splash
+                <div>Cannon</div>
+                <div style="font-size: 0.9em;">💰75</div>
             </button>
             <button class="tower-btn" data-tower="ice">
-                Ice Tower<br>💰60 - ❄️Slow
+                <div>Ice</div>
+                <div style="font-size: 0.9em;">💰60</div>
             </button>
         </div>
         
@@ -51,6 +111,7 @@
             <p>Your defenses have been overrun!</p>
             <p>Final Score: <span id="finalScore">0</span></p>
             <button class="restart-btn" onclick="restartGame()">Play Again</button>
+            <button class="restart-btn" onclick="backToMenu()">Main Menu</button>
         </div>
         
         <div id="victory">
@@ -58,6 +119,7 @@
             <p>You've successfully defended your base!</p>
             <p>Final Score: <span id="victoryScore">0</span></p>
             <button class="restart-btn" onclick="restartGame()">Play Again</button>
+            <button class="restart-btn" onclick="backToMenu()">Main Menu</button>
         </div>
     </div>
 

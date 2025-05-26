@@ -3,13 +3,26 @@ import { enemyTypes } from '../config/enemyTypes.js';
 import { gameConfig } from '../config/gameConfig.js';
 
 export class Enemy {
-    constructor(type, pathIndex = 0) {
+    constructor(type, pathIndex = 0, difficulty = 'normal', wave = 1) {
         const enemyType = enemyTypes[type];
+        const diffConfig = gameConfig.difficulty[difficulty];
+        
         this.type = type;
-        this.maxHp = enemyType.hp;
-        this.hp = enemyType.hp;
-        this.speed = enemyType.speed;
-        this.gold = enemyType.gold;
+        
+        // Apply difficulty modifiers
+        let healthMultiplier = diffConfig.enemyHealthMultiplier;
+        let speedMultiplier = diffConfig.enemySpeedMultiplier;
+        
+        // Apply wave scaling for endless mode
+        if (difficulty === 'endless' && wave > 1) {
+            const waveMultiplier = Math.pow(diffConfig.waveScaling, wave - 1);
+            healthMultiplier *= waveMultiplier;
+        }
+        
+        this.maxHp = Math.floor(enemyType.hp * healthMultiplier);
+        this.hp = this.maxHp;
+        this.speed = enemyType.speed * speedMultiplier;
+        this.gold = Math.floor(enemyType.gold * diffConfig.goldMultiplier);
         this.score = enemyType.score;
         this.color = enemyType.color;
         this.size = enemyType.size;
