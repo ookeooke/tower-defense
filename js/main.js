@@ -1,9 +1,4 @@
-// Initialize save manager
-const saveManager = new SaveManager();
-window.saveManager = saveManager; // Make available globally
-window.maps = maps; // Make maps available globally
-window.saveManager = saveManager; // Make available globally
-window.maps// js/main.js
+// js/main.js
 import { GameState } from './systems/GameState.js';
 import { RenderSystem } from './systems/RenderSystem.js';
 import { WaveManager } from './systems/WaveManager.js';
@@ -19,6 +14,8 @@ const ctx = canvas.getContext('2d');
 
 // Initialize save manager
 const saveManager = new SaveManager();
+window.saveManager = saveManager; // Make available globally
+window.maps = maps; // Make maps available globally
 
 // Current map data
 let currentMap = null;
