@@ -25,12 +25,51 @@
                 </select>
             </div>
             
-            <button class="menu-btn" onclick="startNewGame()">Start New Game</button>
+            <button class="menu-btn" onclick="showHeroSelect()">Start New Game</button>
             <button class="menu-btn" onclick="showInstructions()">How to Play</button>
             
             <div class="game-stats">
                 <p>Best Score: <span id="bestScore">0</span></p>
+                <p>💰 Total Gold: <span id="totalGold">0</span></p>
             </div>
+        </div>
+        
+        <!-- Hero Selection Screen -->
+        <div id="heroSelect" class="hide">
+            <h2>Select Your Hero</h2>
+            <div id="heroGrid">
+                <div class="hero-card selected" data-hero="warrior">
+                    <div class="hero-icon">⚔️</div>
+                    <h3>Warrior</h3>
+                    <p>Level <span class="hero-level">1</span></p>
+                    <div class="hero-stats">
+                        <div>💪 High HP</div>
+                        <div>🗡️ Melee</div>
+                        <div>🛡️ Blocks enemies</div>
+                    </div>
+                </div>
+                <div class="hero-card locked" data-hero="archer">
+                    <div class="hero-icon">🏹</div>
+                    <h3>Archer</h3>
+                    <p>Coming Soon</p>
+                </div>
+                <div class="hero-card locked" data-hero="mage">
+                    <div class="hero-icon">🧙</div>
+                    <h3>Mage</h3>
+                    <p>Coming Soon</p>
+                </div>
+            </div>
+            <button class="menu-btn" onclick="showMapSelect()">Continue</button>
+            <button class="menu-btn" onclick="backToMainMenu()">Back</button>
+        </div>
+        
+        <!-- Map Selection Screen -->
+        <div id="mapSelect" class="hide">
+            <h2>Select Map</h2>
+            <div id="mapGrid">
+                <!-- Maps will be generated dynamically -->
+            </div>
+            <button class="menu-btn" onclick="backToHeroSelect()">Back</button>
         </div>
         
         <!-- Instructions Screen -->

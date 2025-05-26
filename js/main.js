@@ -1,14 +1,27 @@
-// js/main.js
+// Initialize save manager
+const saveManager = new SaveManager();
+window.saveManager = saveManager; // Make available globally
+window.maps = maps; // Make maps available globally
+window.saveManager = saveManager; // Make available globally
+window.maps// js/main.js
 import { GameState } from './systems/GameState.js';
 import { RenderSystem } from './systems/RenderSystem.js';
 import { WaveManager } from './systems/WaveManager.js';
 import { Tower } from './entities/Tower.js';
 import { towerTypes } from './config/towerTypes.js';
 import { gameConfig } from './config/gameConfig.js';
+import { SaveManager } from './systems/SaveManager.js';
+import { maps, getMapById } from './config/mapConfig.js';
 
 // Initialize game
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
+
+// Initialize save manager
+const saveManager = new SaveManager();
+
+// Current map data
+let currentMap = null;
 
 // Handle responsive canvas sizing
 function resizeCanvas() {
@@ -39,10 +52,11 @@ const waveManager = new WaveManager();
 // Initially hide the canvas until game starts
 canvas.style.display = 'none';
 
-// Load best score from localStorage
+// Load best score and total gold from localStorage
 function loadBestScore() {
     const bestScore = localStorage.getItem('towerDefenseBestScore') || 0;
     document.getElementById('bestScore').textContent = bestScore;
+    document.getElementById('totalGold').textContent = saveManager.data.totalGold;
 }
 
 // Save best score
@@ -282,14 +296,96 @@ document.addEventListener('keydown', (e) => {
 });
 
 // Menu functions
-window.startNewGame = function() {
+window.showHeroSelect = function() {
+    document.getElementById('mainMenu').style.display = 'none';
+    document.getElementById('heroSelect').classList.remove('hide');
+    
+    // Update hero levels from save data
+    const warriorLevel = saveManager.data.heroes.warrior.level;
+    document.querySelector('.hero-card[data-hero="warrior"] .hero-level').textContent = warriorLevel;
+};
+
+window.backToMainMenu = function() {
+    document.getElementById('heroSelect').classList.add('hide');
+    document.getElementById('mapSelect').classList.add('hide');
+    document.getElementById('mainMenu').style.display = 'block';
+};
+
+window.showMapSelect = function() {
+    document.getElementById('heroSelect').classList.add('hide');
+    document.getElementById('mapSelect').classList.remove('hide');
+    
+    // Generate map cards
+    generateMapCards();
+};
+
+window.backToHeroSelect = function() {
+    document.getElementById('mapSelect').classList.add('hide');
+    document.getElementById('heroSelect').classList.remove('hide');
+};
+
+function generateMapCards() {
+    const mapGrid = document.getElementById('mapGrid');
+    mapGrid.innerHTML = '';
+    
+    const difficulty = document.getElementById('difficulty').value;
+    
+    maps.forEach((map, index) => {
+        const isUnlocked = saveManager.isMapUnlocked(map.id);
+        const stars = saveManager.getMapStars(map.id, difficulty);
+        
+        const mapCard = document.createElement('div');
+        mapCard.className = `map-card ${isUnlocked ? '' : 'locked'}`;
+        mapCard.dataset.mapId = map.id;
+        
+        mapCard.innerHTML = `
+            <div class="map-thumbnail">${map.thumbnail}</div>
+            <h3>${map.name}</h3>
+            <p>${map.description}</p>
+            <div class="map-stars">
+                ${[1, 2, 3].map(i => `<span class="star ${i <= stars ? 'earned' : ''}">⭐</span>`).join('')}
+            </div>
+            <div class="map-difficulty">
+                <span class="diff-indicator ${stars > 0 ? 'completed' : ''}">
+                    ${difficulty.toUpperCase()} ${stars > 0 ? '✓' : ''}
+                </span>
+            </div>
+        `;
+        
+        if (isUnlocked) {
+            mapCard.onclick = () => selectMap(map.id);
+        }
+        
+        mapGrid.appendChild(mapCard);
+    });
+}
+
+function selectMap(mapId) {
+    currentMap = getMapById(mapId);
+    if (!currentMap) return;
+    
+    // Hide map select and start game with selected map
+    document.getElementById('mapSelect').classList.add('hide');
+    startGameWithMap();
+}
+
+window.startGameWithMap = function() {
     const difficulty = document.getElementById('difficulty').value;
     gameState.setDifficulty(difficulty);
+    gameState.currentMapId = currentMap.id;
     gameState.reset();
     gameState.hideScreens();
     
-    // Hide menu and show game
-    document.getElementById('mainMenu').style.display = 'none';
+    // Apply map-specific settings
+    if (currentMap) {
+        gameState.gold = currentMap.startingGold;
+        gameState.lives = currentMap.startingLives;
+        gameState.maxWave = currentMap.waves;
+        // Update path in gameConfig (temporarily)
+        gameConfig.path = currentMap.paths[0];
+    }
+    
+    // Show game
     canvas.style.display = 'block';
     document.getElementById('gameControls').style.display = 'flex';
     resizeCanvas();
@@ -309,6 +405,11 @@ window.startNewGame = function() {
     requestAnimationFrame(gameLoop);
 };
 
+// Legacy function for backwards compatibility
+window.startNewGame = function() {
+    showHeroSelect();
+};
+
 window.showInstructions = function() {
     document.getElementById('mainMenu').style.display = 'none';
     document.getElementById('instructions').classList.remove('hide');
@@ -325,12 +426,28 @@ window.backToMenu = function() {
     gameState.hideScreens();
     saveBestScore();
     
-    // Hide game and show menu
+    // Hide game and show map selection
     canvas.style.display = 'none';
     document.getElementById('gameControls').style.display = 'none';
-    document.getElementById('mainMenu').style.display = 'block';
+    document.getElementById('mapSelect').classList.remove('hide');
+    generateMapCards(); // Refresh map cards to show new progress
     loadBestScore();
 };
 
 // Initialize
 loadBestScore();
+
+// Hero selection
+document.querySelectorAll('.hero-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+        const heroId = e.currentTarget.dataset.hero;
+        if (!e.currentTarget.classList.contains('locked')) {
+            // Remove selected from all cards
+            document.querySelectorAll('.hero-card').forEach(c => c.classList.remove('selected'));
+            // Add selected to clicked card
+            e.currentTarget.classList.add('selected');
+            // Save selected hero
+            saveManager.selectHero(heroId);
+        }
+    });
+});

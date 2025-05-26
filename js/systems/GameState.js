@@ -6,6 +6,7 @@ export class GameState {
         this.difficulty = 'normal';
         this.isPaused = false;
         this.gameSpeed = 1; // 1 = normal, 2 = fast, 3 = faster
+        this.currentMapId = null;
         this.reset();
     }
     
@@ -115,10 +116,27 @@ export class GameState {
         document.getElementById('victory').style.display = 'block';
         this.gameRunning = false;
         
-        // Save best score on victory too
+        // Save progress and unlock next map
         const currentBest = parseInt(localStorage.getItem('towerDefenseBestScore') || 0);
         if (this.score > currentBest) {
             localStorage.setItem('towerDefenseBestScore', this.score);
+        }
+        
+        // Save map progress (imported SaveManager needed in main.js)
+        if (this.currentMapId && window.saveManager) {
+            window.saveManager.updateMapProgress(this.currentMapId, this.score, this.lives, this.difficulty);
+            
+            // Unlock next map if exists
+            const mapIndex = window.maps.findIndex(m => m.id === this.currentMapId);
+            if (mapIndex !== -1 && mapIndex < window.maps.length - 1) {
+                window.saveManager.unlockMap(window.maps[mapIndex + 1].id);
+            }
+            
+            // Add gold reward
+            const map = window.maps.find(m => m.id === this.currentMapId);
+            if (map && map.rewards) {
+                window.saveManager.addGold(map.rewards.gold);
+            }
         }
     }
     
