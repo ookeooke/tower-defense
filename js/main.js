@@ -7,15 +7,19 @@ import { towerTypes } from './config/towerTypes.js';
 import { gameConfig } from './config/gameConfig.js';
 import { SaveManager } from './systems/SaveManager.js';
 import { maps, getMapById } from './config/mapConfig.js';
+import { WorldMap } from './systems/WorldMap.js';
 
 // Initialize game
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
 // Initialize save manager
+// Initialize save manager and world map
 const saveManager = new SaveManager();
+const worldMap = new WorldMap(saveManager);
 window.saveManager = saveManager; // Make available globally
 window.maps = maps; // Make maps available globally
+window.worldMap = worldMap; // Make world map available globally
 
 // Current map data
 let currentMap = null;
@@ -310,14 +314,13 @@ window.backToMainMenu = function() {
 
 window.showMapSelect = function() {
     document.getElementById('heroSelect').classList.add('hide');
-    document.getElementById('mapSelect').classList.remove('hide');
-    
-    // Generate map cards
-    generateMapCards();
+    // Show world map instead of old map select
+    worldMap.show();
 };
 
 window.backToHeroSelect = function() {
     document.getElementById('mapSelect').classList.add('hide');
+    worldMap.hide();
     document.getElementById('heroSelect').classList.remove('hide');
 };
 
@@ -401,6 +404,9 @@ window.startGameWithMap = function() {
     accumulator = 0;
     requestAnimationFrame(gameLoop);
 };
+
+// Set current map globally for WorldMap to use
+window.currentMap = currentMap;
 
 // Legacy function for backwards compatibility
 window.startNewGame = function() {

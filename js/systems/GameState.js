@@ -111,31 +111,31 @@ export class GameState {
         return true;
     }
     
-    showVictory() {
+     showVictory() {
         document.getElementById('victoryScore').textContent = this.score;
         document.getElementById('victory').style.display = 'block';
         this.gameRunning = false;
         
-        // Save progress and unlock next map
+        // Save progress
         const currentBest = parseInt(localStorage.getItem('towerDefenseBestScore') || 0);
         if (this.score > currentBest) {
             localStorage.setItem('towerDefenseBestScore', this.score);
         }
         
-        // Save map progress (imported SaveManager needed in main.js)
+        // Save map progress
         if (this.currentMapId && window.saveManager) {
             window.saveManager.updateMapProgress(this.currentMapId, this.score, this.lives, this.difficulty);
-            
-            // Unlock next map if exists
-            const mapIndex = window.maps.findIndex(m => m.id === this.currentMapId);
-            if (mapIndex !== -1 && mapIndex < window.maps.length - 1) {
-                window.saveManager.unlockMap(window.maps[mapIndex + 1].id);
-            }
             
             // Add gold reward
             const map = window.maps.find(m => m.id === this.currentMapId);
             if (map && map.rewards) {
                 window.saveManager.addGold(map.rewards.gold);
+                
+                // Add hero XP
+                if (map.rewards.heroXP) {
+                    const selectedHero = window.saveManager.getSelectedHero();
+                    window.saveManager.addHeroExperience(selectedHero, map.rewards.heroXP);
+                }
             }
         }
     }

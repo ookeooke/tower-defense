@@ -63,13 +63,95 @@
             <button class="menu-btn" onclick="backToMainMenu()">Back</button>
         </div>
         
-        <!-- Map Selection Screen -->
+        <!-- World Map Screen -->
+        <div id="worldMap" class="hide">
+            <div class="world-map-header">
+                <h2>World Map</h2>
+                <div class="world-map-stats">
+                    <span>💰 <span id="worldMapGold">0</span></span>
+                    <span>⭐ <span id="totalStars">0</span></span>
+                </div>
+            </div>
+            <div id="worldMapCanvas">
+                <canvas id="mapCanvas"></canvas>
+                <div id="mapNodes"></div>
+            </div>
+            <div class="world-map-buttons">
+                <button class="menu-btn small" onclick="showShop()">🛒 Shop</button>
+                <button class="menu-btn small" onclick="showAchievements()">🏆 Achievements</button>
+                <button class="menu-btn small" onclick="showDailyChallenge()">📅 Daily</button>
+                <button class="menu-btn small" onclick="backToHeroSelect()">🔙 Back</button>
+            </div>
+        </div>
+        <!-- World Map Screen -->
+        <div id="worldMap" class="hide">
+            <div class="world-map-header">
+                <h2>World Map</h2>
+                <div class="world-map-stats">
+                    <span>💰 <span id="worldMapGold">0</span></span>
+                    <span>⭐ <span id="totalStars">0</span></span>
+                </div>
+            </div>
+            <div id="worldMapCanvas">
+                <canvas id="mapCanvas"></canvas>
+                <div id="mapNodes"></div>
+            </div>
+            <div class="world-map-buttons">
+                <button class="menu-btn small" onclick="showShop()">🛒 Shop</button>
+                <button class="menu-btn small" onclick="showAchievements()">🏆 Achievements</button>
+                <button class="menu-btn small" onclick="showDailyChallenge()">📅 Daily</button>
+                <button class="menu-btn small" onclick="backToHeroSelect()">🔙 Back</button>
+            </div>
+        </div>
+        
+        <!-- Shop Screen -->
+        <div id="shopScreen" class="hide">
+            <h2>Shop</h2>
+            <p>Coming Soon!</p>
+            <button class="menu-btn" onclick="hideShop()">Back</button>
+        </div>
+        
+        <!-- Achievements Screen -->
+        <div id="achievementsScreen" class="hide">
+            <h2>Achievements</h2>
+            <p>Coming Soon!</p>
+            <button class="menu-btn" onclick="hideAchievements()">Back</button>
+        </div>
+        
+        <!-- Daily Challenge Screen -->
+        <div id="dailyChallengeScreen" class="hide">
+            <h2>Daily Challenge</h2>
+            <p>Coming Soon!</p>
+            <button class="menu-btn" onclick="hideDailyChallenge()">Back</button>
+        </div>
+        <!-- Map Selection Screen (Legacy) -->
         <div id="mapSelect" class="hide">
             <h2>Select Map</h2>
             <div id="mapGrid">
                 <!-- Maps will be generated dynamically -->
             </div>
             <button class="menu-btn" onclick="backToHeroSelect()">Back</button>
+        </div>
+        
+        <!-- Shop Screen -->
+        <div id="shopScreen" class="hide">
+            <h2>Shop</h2>
+            <p>Coming Soon!</p>
+            <button class="menu-btn" onclick="hideShop()">Back</button>
+        </div>
+        
+        <!-- Achievements Screen -->
+        <div id="achievementsScreen" class="hide">
+            <h2>Achievements</h2>
+            <p>Coming Soon!</p>
+            <button class="menu-btn" onclick="hideAchievements()">Back</button>
+        </div>
+        
+        <!-- Daily Challenge Screen -->
+        <div id="dailyChallengeScreen" class="hide">
+            <h2>Daily Challenge</h2>
+            <p>Coming Soon!</p>
+            <button class="menu-btn" onclick="hideDailyChallenge()">Back</button>
         </div>
         
         <!-- Instructions Screen -->
