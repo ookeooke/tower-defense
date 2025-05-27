@@ -513,6 +513,7 @@ body {
     border-color: #22c55e;
     color: #22c55e;
 }
+
 /* World Map Styles */
 #worldMap {
     position: absolute;
@@ -691,6 +692,7 @@ body {
     overflow-y: auto;
     z-index: 100;
 }
+
 /* Mobile optimizations */
 @media (max-width: 768px) {
     body {
@@ -742,38 +744,87 @@ body {
     }
     
     #heroSelect, #mapSelect {
-        padding: 20px;
-    }
-    
-    #heroGrid {
-        grid-template-columns: 1fr;
-    }
-    
-    #mapGrid {
-        grid-template-columns: 1fr;
-    }
-    
-    .hero-icon {
-        font-size: 36px;
-    }
-    
-    .map-thumbnail {
-        font-size: 48px;
-    }
+       padding: 20px;
+   }
+   
+   #heroGrid {
+       grid-template-columns: 1fr;
+   }
+   
+   #mapGrid {
+       grid-template-columns: 1fr;
+   }
+   
+   .hero-icon {
+       font-size: 36px;
+   }
+   
+   .map-thumbnail {
+       font-size: 48px;
+   }
+   
+   /* World Map Mobile */
+   .world-map-header {
+       padding: 5px 10px;
+   }
+   
+   .world-map-header h2 {
+       font-size: 18px;
+   }
+   
+   .world-map-stats {
+       font-size: 14px;
+       gap: 10px;
+   }
+   
+   #worldMapCanvas {
+       top: 60px;
+       bottom: 60px;
+   }
+   
+   .map-node {
+       width: 50px;
+       height: 50px;
+       font-size: 24px;
+   }
+   
+   .map-node.boss {
+       width: 60px;
+       height: 60px;
+   }
+   
+   .map-node-name {
+       font-size: 9px;
+   }
+   
+   .map-node-stars .star {
+       font-size: 8px;
+   }
+   
+   .world-map-buttons {
+       flex-wrap: wrap;
+       gap: 5px;
+   }
+   
+   .menu-btn.small {
+       padding: 6px 12px;
+       font-size: 12px;
+       min-width: 80px;
+   }
 }
 
 @media (max-height: 600px) {
-    #gameContainer {
-        aspect-ratio: 16/9;
-    }
-    
-    #mainMenu, #instructions {
-        padding: 15px;
-        max-height: 85vh;
-    }
-    
-    .menu-btn {
-        padding: 8px 16px;
-        margin: 5px;
-    }
+   #gameContainer {
+       aspect-ratio: 16/9;
+   }
+   
+   #mainMenu, #instructions {
+       padding: 15px;
+       max-height: 85vh;
+   }
+   
+   .menu-btn {
+       padding: 8px 16px;
+       margin: 5px;
+   }
 }

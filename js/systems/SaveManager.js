@@ -63,8 +63,17 @@ export class SaveManager {
                 timesCompleted: (this.data.mapProgress[key]?.timesCompleted || 0) + 1,
                 difficulty: difficulty
             };
-            this.save();
         }
+        
+        // Unlock next maps based on map configuration
+        const map = window.maps.find(m => m.id === mapId);
+        if (map && map.unlocks) {
+            map.unlocks.forEach(unlockId => {
+                this.unlockMap(unlockId);
+            });
+        }
+        
+        this.save();
     }
     
     calculateStars(livesLeft) {

@@ -13,7 +13,6 @@ import { WorldMap } from './systems/WorldMap.js';
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-// Initialize save manager
 // Initialize save manager and world map
 const saveManager = new SaveManager();
 const worldMap = new WorldMap(saveManager);
@@ -429,12 +428,42 @@ window.backToMenu = function() {
     gameState.hideScreens();
     saveBestScore();
     
-    // Hide game and show map selection
+    // Hide game and show world map
     canvas.style.display = 'none';
     document.getElementById('gameControls').style.display = 'none';
-    document.getElementById('mapSelect').classList.remove('hide');
-    generateMapCards(); // Refresh map cards to show new progress
+    worldMap.show();
     loadBestScore();
+};
+
+// Shop, Achievements, and Daily Challenge functions
+window.showShop = function() {
+    worldMap.hide();
+    document.getElementById('shopScreen').classList.remove('hide');
+};
+
+window.hideShop = function() {
+    document.getElementById('shopScreen').classList.add('hide');
+    worldMap.show();
+};
+
+window.showAchievements = function() {
+    worldMap.hide();
+    document.getElementById('achievementsScreen').classList.remove('hide');
+};
+
+window.hideAchievements = function() {
+    document.getElementById('achievementsScreen').classList.add('hide');
+    worldMap.show();
+};
+
+window.showDailyChallenge = function() {
+    worldMap.hide();
+    document.getElementById('dailyChallengeScreen').classList.remove('hide');
+};
+
+window.hideDailyChallenge = function() {
+    document.getElementById('dailyChallengeScreen').classList.add('hide');
+    worldMap.show();
 };
 
 // Initialize
