@@ -9,8 +9,12 @@ export class WorldMap {
         this.nodesContainer = document.getElementById('mapNodes');
         this.selectedDifficulty = 'normal';
         
-        this.resize();
-        window.addEventListener('resize', () => this.resize());
+        // Don't resize in constructor - wait until show()
+        window.addEventListener('resize', () => {
+            if (!document.getElementById('worldMap').classList.contains('hide')) {
+                this.resize();
+            }
+        });
     }
     
     resize() {
@@ -23,8 +27,13 @@ export class WorldMap {
     show() {
         document.getElementById('worldMap').classList.remove('hide');
         this.selectedDifficulty = document.getElementById('difficulty').value;
-        this.render();
-        this.updateStats();
+        
+        // Important: resize AFTER making visible
+        setTimeout(() => {
+            this.resize();
+            this.render();
+            this.updateStats();
+        }, 0);
     }
     
     hide() {
