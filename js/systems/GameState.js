@@ -17,26 +17,33 @@ export class GameState {
     }
     
     reset() {
-        const diffConfig = gameConfig.difficulty[this.difficulty] || gameConfig.difficulty.normal;
-        
-        this.gold = diffConfig.startGold;
-        this.lives = diffConfig.startLives;
-        this.wave = gameConfig.initialState.wave;
-        this.score = gameConfig.initialState.score;
-        this.maxWave = diffConfig.maxWave;
-        this.selectedTower = null;
-        this.selectedTowerObj = null;
-        this.gameRunning = true;
-        this.isPaused = false;
-        this.gameSpeed = 1;
-        this.enemies = [];
-        this.towers = [];
-        this.projectiles = [];
-        this.particles = [];
-        this.waveTimer = 0;
-        this.enemiesSpawned = 0;
-        this.enemiesInWave = gameConfig.waves.enemiesBase;
-    }
+   const diffConfig = gameConfig.difficulty[this.difficulty] || gameConfig.difficulty.normal;
+   
+   this.gold = diffConfig.startGold;
+   this.lives = diffConfig.startLives;
+   this.wave = gameConfig.initialState.wave;
+   this.score = gameConfig.initialState.score;
+   this.maxWave = diffConfig.maxWave;
+   this.selectedTower = null;
+   this.selectedTowerObj = null;
+   this.gameRunning = true;
+   this.isPaused = true;  // Start paused instead of false
+   this.gameSpeed = 1;
+   this.enemies = [];
+   this.towers = [];
+   this.projectiles = [];
+   this.particles = [];
+   this.waveTimer = 0;
+   this.enemiesSpawned = 0;
+   this.enemiesInWave = gameConfig.waves.enemiesBase;
+   
+   // Show pause overlay initially
+   const overlay = document.getElementById('pauseOverlay');
+   const pauseBtn = document.getElementById('pauseBtn');
+   overlay.style.display = 'flex';
+   pauseBtn.textContent = '▶️';
+   pauseBtn.classList.add('active');
+}
     
     togglePause() {
         this.isPaused = !this.isPaused;

@@ -75,29 +75,52 @@ const frameTime = 1000 / 60; // 60 FPS
 function gameLoop(currentTime) {
     if (!gameState.gameRunning) return;
     
-    // Handle pause
-    if (gameState.isPaused) {
-        requestAnimationFrame(gameLoop);
-        return;
-    }
-    
     // Calculate delta time
     const deltaTime = currentTime - lastTime;
     lastTime = currentTime;
     
-    // Apply game speed
-    accumulator += deltaTime * gameState.gameSpeed;
+    // Apply game speed (only if not paused)
+    if (!gameState.isPaused) {
+        accumulator += deltaTime * gameState.gameSpeed;
+    }
     
-    // Update game at fixed timestep
-    while (accumulator >= frameTime) {
+    // Update game at fixed timestep (only if not paused)
+    while (accumulator >= frameTime && !gameState.isPaused) {
         updateGame();
         accumulator -= frameTime;
     }
     
-    // Render everything
+    // Always update towers (even when paused) for targeting
+    if (gameState.isPaused) {
+        gameState.towers.forEach(tower => {
+            // Just update targeting, don't fire
+            tower.target = null;
+            let closestDistance = tower.config.range;
+            
+            for (let enemy of gameState.enemies) {
+                const dx = enemy.x - tower.x;
+                const dy = enemy.y - tower.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance <= tower.config.range && distance < closestDistance) {
+                    tower.target = enemy;
+                    closestDistance = distance;
+                }
+            }
+            
+            // Update angle to target
+            if (tower.target) {
+                const dx = tower.target.x - tower.x;
+                const dy = tower.target.y - tower.y;
+                tower.angle = Math.atan2(dy, dx);
+            }
+        });
+    }
+    
+    // Always render everything
     renderer.render(gameState);
     
-    // Update UI
+    // Always update UI
     gameState.updateUI();
     
     requestAnimationFrame(gameLoop);
@@ -371,17 +394,17 @@ function selectMap(mapId) {
 window.startGameWithMap = function() {
     const difficulty = document.getElementById('difficulty').value;
     gameState.setDifficulty(difficulty);
-    gameState.currentMapId = currentMap.id;
+    gameState.currentMapId = window.currentMap.id;  // Use window.currentMap
     gameState.reset();
     gameState.hideScreens();
     
     // Apply map-specific settings
-    if (currentMap) {
-        gameState.gold = currentMap.startingGold;
-        gameState.lives = currentMap.startingLives;
-        gameState.maxWave = currentMap.waves;
+    if (window.currentMap) {  // Use window.currentMap
+        gameState.gold = window.currentMap.startingGold;
+        gameState.lives = window.currentMap.startingLives;
+        gameState.maxWave = window.currentMap.waves;
         // Update path in gameConfig (temporarily)
-        gameConfig.path = currentMap.paths[0];
+        gameConfig.path = window.currentMap.paths[0];
     }
     
     // Show game
