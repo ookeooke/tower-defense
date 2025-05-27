@@ -90,32 +90,30 @@ function gameLoop(currentTime) {
         accumulator -= frameTime;
     }
     
-    // Always update towers (even when paused) for targeting
-    if (gameState.isPaused) {
-        gameState.towers.forEach(tower => {
-            // Just update targeting, don't fire
-            tower.target = null;
-            let closestDistance = tower.config.range;
+    // Always update towers for targeting visualization (even when paused)
+    gameState.towers.forEach(tower => {
+        // Update targeting
+        tower.target = null;
+        let closestDistance = tower.config.range;
+        
+        for (let enemy of gameState.enemies) {
+            const dx = enemy.x - tower.x;
+            const dy = enemy.y - tower.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
             
-            for (let enemy of gameState.enemies) {
-                const dx = enemy.x - tower.x;
-                const dy = enemy.y - tower.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                
-                if (distance <= tower.config.range && distance < closestDistance) {
-                    tower.target = enemy;
-                    closestDistance = distance;
-                }
+            if (distance <= tower.config.range && distance < closestDistance) {
+                tower.target = enemy;
+                closestDistance = distance;
             }
-            
-            // Update angle to target
-            if (tower.target) {
-                const dx = tower.target.x - tower.x;
-                const dy = tower.target.y - tower.y;
-                tower.angle = Math.atan2(dy, dx);
-            }
-        });
-    }
+        }
+        
+        // Update angle to target
+        if (tower.target) {
+            const dx = tower.target.x - tower.x;
+            const dy = tower.target.y - tower.y;
+            tower.angle = Math.atan2(dy, dx);
+        }
+    });
     
     // Always render everything
     renderer.render(gameState);

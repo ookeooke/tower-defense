@@ -99,12 +99,35 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 50;
+    flex-direction: column;
+    text-align: center;
+    pointer-events: none; /* Allow clicks to pass through */
+}
+
+#pauseOverlay * {
+    pointer-events: auto; /* But allow clicks on text/buttons inside */
 }
 
 #pauseOverlay h2 {
     color: white;
     font-size: clamp(24px, 5vw, 48px);
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    margin: 0;
+}
+
+#pauseOverlay p {
+    color: #94a3b8;
+    margin: 10px 0;
+    font-size: clamp(14px, 3vw, 18px);
+}
+
+#pauseMessage {
+    background: rgba(0, 0, 0, 0.9);
+    padding: 30px 50px;
+    border-radius: 15px;
+    border: 2px solid #0ea5e9;
+    box-shadow: 0 0 30px rgba(14, 165, 233, 0.5);
+    pointer-events: auto;
 }
 
 #towers {
