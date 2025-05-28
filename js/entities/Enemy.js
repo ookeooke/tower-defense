@@ -48,11 +48,29 @@ export class Enemy {
             if (distance < 5) {
                 this.pathIndex++;
                 
-                // Check if enemy reached the end
+                // Check if enemy reached the last path point
                 if (this.pathIndex >= this.currentPath.length - 1) {
+                    // Move to the exact final position
+                    this.x = this.currentPath[this.currentPath.length - 1].x;
+                    this.y = this.currentPath[this.currentPath.length - 1].y;
                     return true; // Enemy reached the end
                 }
             } else {
+                this.x += (dx / distance) * currentSpeed;
+                this.y += (dy / distance) * currentSpeed;
+            }
+        } else {
+            // Enemy is at the last path segment, check if it went past the screen
+            const finalPoint = this.currentPath[this.currentPath.length - 1];
+            const dx = finalPoint.x - this.x;
+            const dy = finalPoint.y - this.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance < 5 || this.x > 930) {
+                // Enemy has reached the end or gone off screen
+                return true;
+            } else {
+                // Continue moving toward the final point
                 this.x += (dx / distance) * currentSpeed;
                 this.y += (dy / distance) * currentSpeed;
             }
