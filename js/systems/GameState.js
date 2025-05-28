@@ -1,10 +1,15 @@
 // js/systems/GameState.js
 import { gameConfig } from '../config/gameConfig.js';
 
+
 export class GameState {
     constructor() {
+        /** 'build' = before first wave, enemies frozen
+         *  'combat' = normal play
+         */
+        this.phase = 'build';
         this.difficulty = 'normal';
-        this.isPaused = false;
+        this.isPaused = true;  // only used after combat starts
         this.gameSpeed = 1; // 1 = normal, 2 = fast, 3 = faster
         this.currentMapId = null;
         this.reset();
@@ -27,8 +32,9 @@ export class GameState {
    this.selectedTower = null;
    this.selectedTowerObj = null;
    this.gameRunning = true;
-   this.isPaused = true;  // Start paused
-   this.gameSpeed = 1;
+   this.phase = 'build';
+   this.isPaused = true;  // build phase is technically "paused"
+   this.gameSpeed = 1; // Reset game speed
    this.enemies = [];
    this.towers = [];
    this.projectiles = [];
@@ -36,44 +42,70 @@ export class GameState {
    this.waveTimer = 0;
    this.enemiesSpawned = 0;
    this.enemiesInWave = gameConfig.waves.enemiesBase;
-   this.isInitialPause = true; // Track if this is the initial pause
    
-   // Show pause overlay with custom message for start
+   // Initialize hero at spawn point
+   this.hero = new Hero(100, 300, 'warrior');
+   
+   // Show build phase overlay
    const overlay = document.getElementById('pauseOverlay');
    const pauseBtn = document.getElementById('pauseBtn');
    const pauseMessage = document.getElementById('pauseMessage');
    
    overlay.style.display = 'flex';
-   pauseMessage.innerHTML = '<h2>PREPARE YOUR DEFENSES!</h2><p style="font-size: 18px; margin-top: 10px;">Build towers before the enemies arrive</p><p style="font-size: 14px; margin-top: 20px;">Press SPACE or click ▶️ to start</p>';
-   pauseBtn.textContent = '▶️';
+pauseMessage.innerHTML = '<h2>PREPARE YOUR DEFENSES!</h2><p style="margin-top:10px; font-size: 16px;">Place towers and position your hero</p><p style="margin-top:10px; color: #64748b;">Press ▶️ or SPACE to begin</p>';
    pauseBtn.classList.add('active');
+   
+   // Disable speed button initially
+   const speedBtn = document.getElementById('speedBtn');
+   speedBtn.disabled = true;
+   speedBtn.style.opacity = '0.5';
+   speedBtn.style.cursor = 'not-allowed';
+   
+   // Show hero health initially
+   document.getElementById('heroHealth').style.display = 'block';
+   document.getElementById('heroHp').textContent = this.hero.hp;
+   document.getElementById('respawnHero').style.display = 'none';
 }
     
     togglePause() {
-        this.isPaused = !this.isPaused;
-        const overlay = document.getElementById('pauseOverlay');
-        const pauseBtn = document.getElementById('pauseBtn');
-        const pauseMessage = document.getElementById('pauseMessage');
+        // FIRST click = start the game
+        if (this.phase === 'build') {
+            this.phase = 'combat';
+            this.isPaused = false;
+            document.getElementById('pauseOverlay').style.display = 'none';
+            document.getElementById('pauseBtn').textContent = '⏸️';
+            document.getElementById('pauseBtn').classList.remove('active');
+            document.body.classList.remove('paused');
+            
+            // Enable speed button
+            const speedBtn = document.getElementById('speedBtn');
+            speedBtn.disabled = false;
+            speedBtn.style.opacity = '1';
+            speedBtn.style.cursor = 'pointer';
+            return;
+        }
         
+        // Mid-game pause/resume
+        this.isPaused = !this.isPaused;
+        const pauseBtn = document.getElementById('pauseBtn');
+        const speedBtn = document.getElementById('speedBtn');
+        
+        pauseBtn.textContent = this.isPaused ? '▶️' : '⏸️';
+        pauseBtn.classList.toggle('active', this.isPaused);
+        
+        // We do **not** bring back the overlay – the screen just freezes.
+        // But we do add a subtle dimming effect
+        document.body.classList.toggle('paused', this.isPaused);
+        
+        // Disable/enable speed button
         if (this.isPaused) {
-            overlay.style.display = 'flex';
-            // Show different message based on game state
-            if (this.enemies.length > 0 || this.wave > 1 || !this.isInitialPause) {
-                // Mid-game pause - just show PAUSED, no background
-                pauseMessage.innerHTML = '<h2>PAUSED</h2>';
-                overlay.style.background = 'none'; // Remove background for mid-game pause
-            } else {
-                // Initial pause - show build message with background
-                pauseMessage.innerHTML = '<h2>PREPARE YOUR DEFENSES!</h2><p style="font-size: 18px; margin-top: 10px;">Build towers before the enemies arrive</p><p style="font-size: 14px; margin-top: 20px;">Press SPACE or click ▶️ to start</p>';
-                overlay.style.background = 'rgba(0, 0, 0, 0.7)';
-            }
-            pauseBtn.textContent = '▶️';
-            pauseBtn.classList.add('active');
+            speedBtn.disabled = true;
+            speedBtn.style.opacity = '0.5';
+            speedBtn.style.cursor = 'not-allowed';
         } else {
-            overlay.style.display = 'none';
-            pauseBtn.textContent = '⏸️';
-            pauseBtn.classList.remove('active');
-            this.isInitialPause = false; // No longer the initial pause
+            speedBtn.disabled = false;
+            speedBtn.style.opacity = '1';
+            speedBtn.style.cursor = 'pointer';
         }
     }
     cycleSpeed() {
@@ -104,12 +136,9 @@ export class GameState {
         
         // Update game status
         const statusElement = document.getElementById('gameStatus');
-        if (this.isPaused && this.isInitialPause && this.wave === 1 && this.enemies.length === 0) {
+        if (this.phase === 'build') {
             statusElement.textContent = 'BUILD PHASE';
             statusElement.style.color = '#22c55e';
-        } else if (this.isPaused) {
-            statusElement.textContent = 'PAUSED';
-            statusElement.style.color = '#fbbf24';
         } else {
             statusElement.textContent = '';
         }

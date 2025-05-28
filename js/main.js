@@ -80,12 +80,12 @@ function gameLoop(currentTime) {
     lastTime = currentTime;
     
     // Apply game speed (only if not paused)
-    if (!gameState.isPaused) {
+    if (!gameState.isPaused && gameState.phase === 'combat') {
         accumulator += deltaTime * gameState.gameSpeed;
     }
     
-    // Update game at fixed timestep (only if not paused)
-    while (accumulator >= frameTime && !gameState.isPaused) {
+    // Update game at fixed timestep (only if not paused and in combat phase)
+    while (accumulator >= frameTime && !gameState.isPaused && gameState.phase === 'combat') {
         updateGame();
         accumulator -= frameTime;
     }
@@ -292,7 +292,7 @@ document.getElementById('pauseBtn').addEventListener('click', () => {
 
 // Speed button
 document.getElementById('speedBtn').addEventListener('click', () => {
-    if (gameState.gameRunning && !gameState.isPaused) {
+    if (gameState.gameRunning && !gameState.isPaused && gameState.phase === 'combat') {
         gameState.cycleSpeed();
     }
 });
@@ -309,7 +309,7 @@ document.addEventListener('keydown', (e) => {
             break;
         case 'f':
             e.preventDefault();
-            if (!gameState.isPaused) {
+            if (!gameState.isPaused && gameState.phase === 'combat') {
                 gameState.cycleSpeed();
             }
             break;
