@@ -1,0 +1,77 @@
+/* css/components/overlays.css - Overlay styles */
+
+/* Pause Overlay */
+#pauseOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+    flex-direction: column;
+    text-align: center;
+    pointer-events: none;
+}
+
+#pauseOverlay * {
+    pointer-events: auto;
+}
+
+#pauseOverlay h2 {
+    color: white;
+    font-size: clamp(24px, 5vw, 48px);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    margin: 0;
+}
+
+#pauseMessage {
+    background: rgba(0, 0, 0, 0.9);
+    padding: 30px 50px;
+    border-radius: 15px;
+    border: 2px solid #0ea5e9;
+    box-shadow: 0 0 30px rgba(14, 165, 233, 0.5);
+    pointer-events: auto;
+}
+
+body.paused #gameCanvas {
+    filter: brightness(0.6);
+    transition: filter 0.3s ease;
+}
+
+/* Game Over and Victory Screens */
+#gameOver, #victory {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.95);
+    color: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    display: none;
+    z-index: 100;
+    min-width: 280px;
+    max-width: 90%;
+    backdrop-filter: blur(10px);
+}
+
+#gameOver {
+    border: 2px solid #ef4444;
+}
+
+#victory {
+    border: 2px solid #22c55e;
+}
+
+#gameOver h2 {
+    color: #ef4444;
+}
+
+#victory h2 {
+    color: #22c55e;
+}

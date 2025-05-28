@@ -1,0 +1,119 @@
+/* css/utilities/responsive.css - Responsive design utilities */
+
+/* Mobile Landscape Optimizations */
+@media (orientation: landscape) and (max-height: 600px) {
+    #gameContainer {
+        aspect-ratio: auto;
+    }
+    
+    #ui {
+        padding: 5px;
+    }
+    
+    .ui-item {
+        padding: 3px 8px;
+        font-size: 11px;
+    }
+    
+    #towers {
+        padding: 5px;
+    }
+    
+    .tower-btn {
+        min-width: 70px;
+        padding: 8px;
+    }
+    
+    .tower-icon {
+        font-size: 20px;
+    }
+    
+    .control-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+    
+    .world-map-header {
+        padding: 10px 15px;
+    }
+    
+    .map-node {
+        width: 60px;
+        height: 60px;
+        font-size: 28px;
+    }
+    
+    .map-node.boss {
+        width: 70px;
+        height: 70px;
+    }
+}
+
+/* Small Phone Optimizations */
+@media (max-width: 375px) {
+    .tower-btn {
+        min-width: 70px;
+        font-size: 12px;
+        padding: 8px;
+    }
+    
+    .tower-icon {
+        font-size: 20px;
+    }
+    
+    .menu-btn {
+        font-size: 16px;
+        padding: 12px 20px;
+    }
+    
+    #towerInfo {
+        padding: 12px;
+    }
+    
+    .info-header strong {
+        font-size: 16px;
+    }
+    
+    .action-btn {
+        font-size: 14px;
+        padding: 10px;
+    }
+    
+    .hero-card {
+        padding: 12px;
+    }
+    
+    .hero-icon {
+        font-size: 40px;
+    }
+}
+
+/* Large Phone / Small Tablet */
+@media (min-width: 768px) {
+    #gameContainer {
+        border-radius: 15px;
+        border-width: 4px;
+    }
+    
+    .control-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 22px;
+    }
+    
+    .tower-btn {
+        min-width: 100px;
+        padding: 12px;
+    }
+    
+    .tower-icon {
+        font-size: 28px;
+    }
+    
+    #towerInfo {
+        padding: 20px;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+}
