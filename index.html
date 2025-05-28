@@ -136,15 +136,39 @@
                 </ul>
             </div>
             <button class="menu-btn" onclick="hideInstructions()">Back to Menu</button>
-        </div>
-        
+        </div><p><strong>Controls:</strong></p>
+                <ul>
+                    <li>Click ▶️ to start/pause the game</li>
+                    <li>Click a tower button to select it</li>
+                    <li>Click on the map to place the tower</li>
+                    <li>Click on a tower to upgrade or sell it</li>
+                    <li>Click on hero to select, then click to move</li>
+                    <li>Use WASD or Arrow keys to move hero</li>
+                    <li>Press SPACE to pause/unpause</li>
+                </ul>
+                <br>
+                <p><strong>Tower Types:</strong></p>
+                <ul>
+                    <li>🔵 Basic - Balanced stats</li>
+                    <li>🟣 Sniper - Long range, slow fire</li>
+                    <li>🟠 Cannon - Area damage</li>
+                    <li>🔷 Ice - Slows enemies</li>
+                </ul>
+                <br>
+                <p><strong>Hero:</strong></p>
+                <ul>
+                    <li>⚔️ Warrior - High HP, melee attack</li>
+                    <li>Blocks enemy path when positioned</li>
+                    <li>Auto-attacks nearby enemies</li>
+                </ul>
         <div id="ui">
             <div style="text-align: left;">
                 <div>💰 <span id="gold">100</span></div>
                 <div>❤️ <span id="lives">20</span></div>
+                <div id="heroHealth" style="display: none;">🗡️ <span id="heroHp">200</span></div>
             </div>
             <div style="text-align: center;">
-                <div id="gameStatus" style="color: #0ea5e9; font-weight: bold;"></div>
+                <div id="gameStatus" style="color: #0ea5e9; font-weight: bold; font-size: 0.9em;"></div>
             </div>
             <div style="text-align: right;">
                 <div>🌊 <span id="wave">1</span></div>
@@ -189,6 +213,10 @@
             <button class="tower-btn" data-tower="ice">
                 <div>Ice</div>
                 <div style="font-size: 0.9em;">💰60</div>
+            </button>
+            <button id="respawnHero" class="tower-btn" style="display: none; background: linear-gradient(45deg, #dc2626, #ef4444);">
+                <div>Respawn</div>
+                <div style="font-size: 0.9em;">💰100</div>
             </button>
         </div>
         

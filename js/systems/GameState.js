@@ -52,7 +52,8 @@ export class GameState {
    const pauseMessage = document.getElementById('pauseMessage');
    
    overlay.style.display = 'flex';
-pauseMessage.innerHTML = '<h2>PREPARE YOUR DEFENSES!</h2><p style="margin-top:10px; font-size: 16px;">Place towers and position your hero</p><p style="margin-top:10px; color: #64748b;">Press ▶️ or SPACE to begin</p>';
+   pauseMessage.innerHTML = '<h2>PREPARE YOUR DEFENSES!</h2><p style="margin-top:10px; font-size: 16px;">Place towers and position your hero</p><p style="margin-top:10px; color: #64748b;">Press ▶️ or SPACE to begin</p>';
+   pauseBtn.textContent = '▶️';
    pauseBtn.classList.add('active');
    
    // Disable speed button initially
@@ -127,7 +128,7 @@ pauseMessage.innerHTML = '<h2>PREPARE YOUR DEFENSES!</h2><p style="margin-top:10
                 break;
         }
     }
-    
+
     updateUI() {
         document.getElementById('gold').textContent = this.gold;
         document.getElementById('lives').textContent = this.lives;
@@ -213,6 +214,13 @@ pauseMessage.innerHTML = '<h2>PREPARE YOUR DEFENSES!</h2><p style="margin-top:10
         document.getElementById('gameOver').style.display = 'none';
         document.getElementById('victory').style.display = 'none';
         document.getElementById('towerInfo').style.display = 'none';
-        document.querySelectorAll('.tower-btn').forEach(b => b.classList.remove('selected'));
+        document.querySelectorAll('.tower-btn[data-tower]').forEach(b => b.classList.remove('selected'));
+    }
+    
+    respawnHero() {
+        if (this.hero && this.hero.isDead) {
+            // Respawn hero at starting position with full health
+            this.hero = new Hero(100, 300, 'warrior');
+        }
     }
 }

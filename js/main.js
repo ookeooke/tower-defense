@@ -172,11 +172,11 @@ function updateGame() {
 }
 
 // Tower selection buttons
-document.querySelectorAll('.tower-btn').forEach(btn => {
+document.querySelectorAll('.tower-btn[data-tower]').forEach(btn => {
     btn.addEventListener('click', (e) => {
         const towerType = e.currentTarget.dataset.tower;
         
-        document.querySelectorAll('.tower-btn').forEach(b => b.classList.remove('selected'));
+        document.querySelectorAll('.tower-btn[data-tower]').forEach(b => b.classList.remove('selected'));
         
         if (gameState.selectedTower === towerType) {
             gameState.selectedTower = null;
