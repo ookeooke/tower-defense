@@ -43,6 +43,7 @@ function resizeCanvas() {
 
 function showGameHUD() {
     document.getElementById('towers').classList.remove('hide');
+    document.getElementById('towers').style.display = 'flex'; // Force display
     document.getElementById('gameControls').classList.remove('hide');
 }
 
@@ -475,23 +476,22 @@ function selectMap(mapId) {
 window.startGameWithMap = function() {
     const difficulty = document.getElementById('difficulty').value;
     gameState.setDifficulty(difficulty);
-    gameState.currentMapId = window.currentMap.id;  // Use window.currentMap
+    gameState.currentMapId = window.currentMap.id;
     gameState.reset();
     gameState.hideScreens();
     
     // Apply map-specific settings
-    if (window.currentMap) {  // Use window.currentMap
+    if (window.currentMap) {
         gameState.gold = window.currentMap.startingGold;
         gameState.lives = window.currentMap.startingLives;
         gameState.maxWave = window.currentMap.waves;
-        // Update path in gameConfig (temporarily)
         gameConfig.path = window.currentMap.paths[0];
     }
     
     // Show game
     canvas.style.display = 'block';
     document.getElementById('gameControls').style.display = 'flex';
-    showGameHUD(); // ADD THIS LINE
+    showGameHUD(); // THIS IS THE IMPORTANT LINE - Make sure it's called!
     resizeCanvas();
     
     // Reset speed button
