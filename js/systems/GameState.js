@@ -32,6 +32,7 @@ export class GameState {
         this.maxWave = diffConfig.maxWave;
         this.selectedTower = null;
         this.selectedTowerObj = null;
+        this.selectedHero = false;
         this.gameRunning = true;
         this.phase = 'build';
         this.isPaused = true;  // build phase is technically "paused"

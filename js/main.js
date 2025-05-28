@@ -146,8 +146,24 @@ function updateGame() {
     }
     
     if (gameState.hero && !gameState.hero.isDead) {
-        gameState.hero.update(gameState.enemies);
+    const heroDistance = Math.hypot(gameState.hero.x - x, gameState.hero.y - y);
+    if (heroDistance < 20) {
+        // Hero is selected, next click will move hero
+        gameState.selectedHero = true;
+        gameState.selectedTower = null;
+        gameState.selectedTowerObj = null;
+        document.querySelectorAll('.tower-btn').forEach(b => b.classList.remove('selected'));
+        document.getElementById('towerInfo').style.display = 'none';
+        return;
     }
+}
+
+// If hero is selected, move hero to clicked position
+if (gameState.selectedHero) {
+    gameState.hero.setTarget(x, y);
+    gameState.selectedHero = false;
+    return;
+}
     
     // Update towers
     gameState.towers.forEach(tower => {
