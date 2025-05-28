@@ -1,6 +1,7 @@
 // js/systems/GameState.js
+// js/systems/GameState.js - Save this to replace your existing GameState.js file
 import { gameConfig } from '../config/gameConfig.js';
-
+import { Hero } from '../entities/Hero.js';  // Add this import
 
 export class GameState {
     constructor() {
@@ -22,51 +23,51 @@ export class GameState {
     }
     
     reset() {
-   const diffConfig = gameConfig.difficulty[this.difficulty] || gameConfig.difficulty.normal;
-   
-   this.gold = diffConfig.startGold;
-   this.lives = diffConfig.startLives;
-   this.wave = gameConfig.initialState.wave;
-   this.score = gameConfig.initialState.score;
-   this.maxWave = diffConfig.maxWave;
-   this.selectedTower = null;
-   this.selectedTowerObj = null;
-   this.gameRunning = true;
-   this.phase = 'build';
-   this.isPaused = true;  // build phase is technically "paused"
-   this.gameSpeed = 1; // Reset game speed
-   this.enemies = [];
-   this.towers = [];
-   this.projectiles = [];
-   this.particles = [];
-   this.waveTimer = 0;
-   this.enemiesSpawned = 0;
-   this.enemiesInWave = gameConfig.waves.enemiesBase;
-   
-   // Initialize hero at spawn point
-   this.hero = new Hero(100, 300, 'warrior');
-   
-   // Show build phase overlay
-   const overlay = document.getElementById('pauseOverlay');
-   const pauseBtn = document.getElementById('pauseBtn');
-   const pauseMessage = document.getElementById('pauseMessage');
-   
-   overlay.style.display = 'flex';
-   pauseMessage.innerHTML = '<h2>PREPARE YOUR DEFENSES!</h2><p style="margin-top:10px; font-size: 16px;">Place towers and position your hero</p><p style="margin-top:10px; color: #64748b;">Press ▶️ or SPACE to begin</p>';
-   pauseBtn.textContent = '▶️';
-   pauseBtn.classList.add('active');
-   
-   // Disable speed button initially
-   const speedBtn = document.getElementById('speedBtn');
-   speedBtn.disabled = true;
-   speedBtn.style.opacity = '0.5';
-   speedBtn.style.cursor = 'not-allowed';
-   
-   // Show hero health initially
-   document.getElementById('heroHealth').style.display = 'block';
-   document.getElementById('heroHp').textContent = this.hero.hp;
-   document.getElementById('respawnHero').style.display = 'none';
-}
+        const diffConfig = gameConfig.difficulty[this.difficulty] || gameConfig.difficulty.normal;
+        
+        this.gold = diffConfig.startGold;
+        this.lives = diffConfig.startLives;
+        this.wave = gameConfig.initialState.wave;
+        this.score = gameConfig.initialState.score;
+        this.maxWave = diffConfig.maxWave;
+        this.selectedTower = null;
+        this.selectedTowerObj = null;
+        this.gameRunning = true;
+        this.phase = 'build';
+        this.isPaused = true;  // build phase is technically "paused"
+        this.gameSpeed = 1; // Reset game speed
+        this.enemies = [];
+        this.towers = [];
+        this.projectiles = [];
+        this.particles = [];
+        this.waveTimer = 0;
+        this.enemiesSpawned = 0;
+        this.enemiesInWave = gameConfig.waves.enemiesBase;
+        
+        // Initialize hero at spawn point
+        this.hero = new Hero(100, 300, 'warrior');
+        
+        // Show build phase overlay
+        const overlay = document.getElementById('pauseOverlay');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const pauseMessage = document.getElementById('pauseMessage');
+        
+        overlay.style.display = 'flex';
+        pauseMessage.innerHTML = '<h2>PREPARE YOUR DEFENSES!</h2><p style="margin-top:10px; font-size: 16px;">Place towers and position your hero</p><p style="margin-top:10px; color: #64748b;">Press ▶️ or SPACE to begin</p>';
+        pauseBtn.textContent = '▶️';
+        pauseBtn.classList.add('active');
+        
+        // Disable speed button initially
+        const speedBtn = document.getElementById('speedBtn');
+        speedBtn.disabled = true;
+        speedBtn.style.opacity = '0.5';
+        speedBtn.style.cursor = 'not-allowed';
+        
+        // Show hero health initially
+        document.getElementById('heroHealth').style.display = 'block';
+        document.getElementById('heroHp').textContent = this.hero.hp;
+        document.getElementById('respawnHero').style.display = 'none';
+    }
     
     togglePause() {
         // FIRST click = start the game
@@ -109,6 +110,7 @@ export class GameState {
             speedBtn.style.cursor = 'pointer';
         }
     }
+    
     cycleSpeed() {
         this.gameSpeed = this.gameSpeed >= 3 ? 1 : this.gameSpeed + 1;
         const speedBtn = document.getElementById('speedBtn');
@@ -134,6 +136,14 @@ export class GameState {
         document.getElementById('lives').textContent = this.lives;
         document.getElementById('wave').textContent = this.wave;
         document.getElementById('score').textContent = this.score;
+        
+        // Update hero health
+        if (this.hero) {
+            document.getElementById('heroHp').textContent = this.hero.hp;
+            if (this.hero.isDead && !document.getElementById('respawnHero').style.display) {
+                document.getElementById('respawnHero').style.display = 'block';
+            }
+        }
         
         // Update game status
         const statusElement = document.getElementById('gameStatus');
@@ -175,7 +185,7 @@ export class GameState {
         return true;
     }
     
-     showVictory() {
+    showVictory() {
         document.getElementById('victoryScore').textContent = this.score;
         document.getElementById('victory').style.display = 'block';
         this.gameRunning = false;
@@ -218,9 +228,11 @@ export class GameState {
     }
     
     respawnHero() {
-        if (this.hero && this.hero.isDead) {
+        if (this.hero && this.hero.isDead && this.gold >= 100) {
+            this.gold -= 100;
             // Respawn hero at starting position with full health
             this.hero = new Hero(100, 300, 'warrior');
+            document.getElementById('respawnHero').style.display = 'none';
         }
     }
 }

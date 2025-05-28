@@ -145,6 +145,10 @@ function updateGame() {
         }
     }
     
+    if (gameState.hero && !gameState.hero.isDead) {
+        gameState.hero.update(gameState.enemies);
+    }
+    
     // Update towers
     gameState.towers.forEach(tower => {
         tower.update(gameState.enemies, gameState.projectiles);
@@ -271,6 +275,12 @@ document.getElementById('upgradeBtn').addEventListener('click', () => {
 document.getElementById('sellBtn').addEventListener('click', () => {
     if (gameState.selectedTowerObj) {
         gameState.selectedTowerObj.sell(gameState);
+    }
+});
+
+document.getElementById('respawnHero').addEventListener('click', () => {
+    if (gameState.hero && gameState.hero.isDead && gameState.gold >= 100) {
+        gameState.respawnHero();
     }
 });
 

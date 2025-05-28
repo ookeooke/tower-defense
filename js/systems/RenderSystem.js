@@ -1,4 +1,3 @@
-// js/systems/RenderSystem.js
 import { gameConfig } from '../config/gameConfig.js';
 
 export class RenderSystem {
@@ -61,10 +60,17 @@ export class RenderSystem {
         this.ctx.globalAlpha = 1;
     }
     
+    drawHero(hero) {
+        if (hero && !hero.isDead) {
+            hero.draw(this.ctx);
+        }
+    }
+    
     render(gameState) {
         this.clear();
         this.drawPath();
         this.drawEnemies(gameState.enemies);
+        this.drawHero(gameState.hero);
         this.drawTowers(gameState.towers, gameState.selectedTowerObj);
         this.drawProjectiles(gameState.projectiles);
         this.drawParticles(gameState.particles);
