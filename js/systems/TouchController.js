@@ -252,4 +252,268 @@ export class TouchController {
         // Check if tapping on a tower
         for (const tower of this.gameState.towers) {
             const towerDistance = Math.hypot(tower.x - pos.x, tower.y - pos.y);
-            if (towerDistance < 35)
+            if (towerDistance < 35) {
+                this.selectTower(tower);
+                return;
+            }
+        }
+        
+        // Try to place tower or move hero
+        if (this.gameState.selectedHero && this.gameState.hero && !this.gameState.hero.isDead) {
+            this.gameState.hero.setTarget(pos.x, pos.y);
+            this.gameState.selectedHero = false;
+            this.selectedEntity = null;
+            MobileUtils.vibrate(10);
+        } else if (this.gameState.selectedTower) {
+            this.placeTower(pos);
+        } else {
+            // Deselect everything and show tower selector
+            this.deselectAll();
+        }
+    }
+    
+    handleDoubleTap(pos) {
+        // Quick upgrade on double tap
+        for (const tower of this.gameState.towers) {
+            const towerDistance = Math.hypot(tower.x - pos.x, tower.y - pos.y);
+            if (towerDistance < 35) {
+                if (tower.canUpgrade() && this.gameState.gold >= tower.getUpgradeCost()) {
+                    tower.upgrade(this.gameState);
+                    this.showTowerInfo(tower);
+                    MobileUtils.vibrate([10, 50, 10]); // Pattern vibration for upgrade
+                    
+                    // Show upgrade effect
+                    this.showUpgradeEffect(tower.x, tower.y);
+                }
+                return;
+            }
+        }
+        
+        // Double tap on hero to center camera (if implemented)
+        if (this.gameState.hero && !this.gameState.hero.isDead) {
+            const heroDistance = Math.hypot(
+                this.gameState.hero.x - pos.x,
+                this.gameState.hero.y - pos.y
+            );
+            if (heroDistance < 30) {
+                // Could implement camera centering here
+                MobileUtils.vibrate(20);
+            }
+        }
+    }
+    
+    handleLongPress(pos) {
+        // Long press on tower shows detailed info
+        for (const tower of this.gameState.towers) {
+            const towerDistance = Math.hypot(tower.x - pos.x, tower.y - pos.y);
+            if (towerDistance < 35) {
+                this.selectTower(tower);
+                MobileUtils.vibrate(30);
+                return;
+            }
+        }
+        
+        // Long press on empty space could show range indicators for all towers
+        if (this.gameState.towers.length > 0) {
+            // Could implement showing all tower ranges
+            MobileUtils.vibrate(20);
+        }
+    }
+    
+    selectHero() {
+        this.selectedEntity = 'hero';
+        this.gameState.selectedHero = true;
+        this.gameState.selectedTower = null;
+        this.gameState.selectedTowerObj = null;
+        
+        // Clear tower selection
+        document.querySelectorAll('.tower-btn').forEach(b => b.classList.remove('selected'));
+        document.getElementById('towerInfo').style.display = 'none';
+        document.getElementById('towers').style.display = 'none';
+        
+        MobileUtils.vibrate(10);
+    }
+    
+    selectTower(tower) {
+        this.gameState.selectedTowerObj = tower;
+        this.gameState.selectedTower = null;
+        this.gameState.selectedHero = false;
+        this.selectedEntity = null;
+        
+        // Clear tower button selection
+        document.querySelectorAll('.tower-btn').forEach(b => b.classList.remove('selected'));
+        
+        // Show tower info and hide tower selector
+        this.showTowerInfo(tower);
+        document.getElementById('towers').style.display = 'none';
+        
+        MobileUtils.vibrate(10);
+    }
+    
+    placeTower(pos) {
+        if (this.gameState.isValidTowerPosition(pos.x, pos.y)) {
+            const towerType = this.gameState.selectedTower;
+            const cost = towerTypes[towerType].cost;
+            
+            if (this.gameState.gold >= cost) {
+                // Create new tower
+                this.gameState.towers.push(new Tower(pos.x, pos.y, towerType));
+                this.gameState.gold -= cost;
+                
+                // Clear selection
+                this.gameState.selectedTower = null;
+                document.querySelectorAll('.tower-btn').forEach(b => b.classList.remove('selected'));
+                
+                // Feedback
+                MobileUtils.vibrate([10, 30, 10]);
+                this.showPlacementEffect(pos.x, pos.y);
+                
+                // Keep tower selector open for quick placement
+                this.placementIndicator.show = false;
+            } else {
+                // Not enough gold
+                MobileUtils.vibrate([50, 50, 50]);
+                this.showErrorEffect(pos.x, pos.y, 'Not enough gold!');
+            }
+        } else {
+            // Invalid position
+            MobileUtils.vibrate([30, 30]);
+            this.showErrorEffect(pos.x, pos.y, 'Invalid position!');
+        }
+    }
+    
+    deselectAll() {
+        this.gameState.selectedTowerObj = null;
+        this.gameState.selectedTower = null;
+        this.gameState.selectedHero = false;
+        this.selectedEntity = null;
+        
+        document.getElementById('towerInfo').style.display = 'none';
+        document.getElementById('towers').style.display = 'flex';
+        document.querySelectorAll('.tower-btn').forEach(b => b.classList.remove('selected'));
+    }
+    
+    updatePlacementIndicator(pos) {
+        this.placementIndicator.x = pos.x;
+        this.placementIndicator.y = pos.y;
+        this.placementIndicator.show = true;
+        this.placementIndicator.valid = this.gameState.isValidTowerPosition(pos.x, pos.y);
+        
+        // Store in gameState for renderer
+        this.gameState.placementPos = pos;
+        this.gameState.isValidPlacement = this.placementIndicator.valid;
+    }
+    
+    showTowerInfo(tower) {
+        const info = document.getElementById('towerInfo');
+        const config = tower.config;
+        
+        // Update tower info
+        document.getElementById('towerName').textContent = towerTypes[tower.type].name;
+        document.getElementById('towerLevel').textContent = tower.level + 1;
+        document.getElementById('towerDamage').textContent = config.damage;
+        document.getElementById('towerRange').textContent = config.range;
+        document.getElementById('towerFireRate').textContent = (config.fireRate / 1000).toFixed(1) + 's';
+        document.getElementById('towerDPS').textContent = Math.round(config.damage / (config.fireRate / 1000));
+        
+        // Update buttons
+        const upgradeBtn = document.getElementById('upgradeBtn');
+        const sellBtn = document.getElementById('sellBtn');
+        
+        if (tower.canUpgrade()) {
+            const upgradeCost = tower.getUpgradeCost();
+            upgradeBtn.textContent = `Upgrade (💰${upgradeCost})`;
+            upgradeBtn.disabled = this.gameState.gold < upgradeCost;
+            upgradeBtn.onclick = () => {
+                if (tower.upgrade(this.gameState)) {
+                    this.showTowerInfo(tower);
+                    MobileUtils.vibrate([10, 50, 10]);
+                    this.showUpgradeEffect(tower.x, tower.y);
+                }
+            };
+        } else {
+            upgradeBtn.textContent = 'MAX LEVEL';
+            upgradeBtn.disabled = true;
+            upgradeBtn.onclick = null;
+        }
+        
+        sellBtn.textContent = `Sell (💰${tower.getSellValue()})`;
+        sellBtn.onclick = () => {
+            tower.sell(this.gameState);
+            info.style.display = 'none';
+            document.getElementById('towers').style.display = 'flex';
+            MobileUtils.vibrate(20);
+        };
+        
+        info.style.display = 'block';
+    }
+    
+    // Visual effects
+    showPlacementEffect(x, y) {
+        // Add placement particles to gameState
+        for (let i = 0; i < 8; i++) {
+            const angle = (i / 8) * Math.PI * 2;
+            this.gameState.particles.push({
+                x: x,
+                y: y,
+                vx: Math.cos(angle) * 3,
+                vy: Math.sin(angle) * 3,
+                life: 20,
+                color: '#22c55e'
+            });
+        }
+    }
+    
+    showUpgradeEffect(x, y) {
+        // Add upgrade particles
+        for (let i = 0; i < 12; i++) {
+            const angle = (i / 12) * Math.PI * 2;
+            this.gameState.particles.push({
+                x: x,
+                y: y,
+                vx: Math.cos(angle) * 4,
+                vy: Math.sin(angle) * 4 - 2,
+                life: 30,
+                color: '#fbbf24'
+            });
+        }
+    }
+    
+    showErrorEffect(x, y, message) {
+        // Could implement floating text effect
+        console.log(`Error at ${x}, ${y}: ${message}`);
+    }
+    
+    // Get placement indicator for rendering
+    getPlacementIndicator() {
+        return this.placementIndicator;
+    }
+    
+    // Clean up
+    destroy() {
+        // Remove all event listeners
+        this.canvas.removeEventListener('touchstart', this.handleTouchStart);
+        this.canvas.removeEventListener('touchmove', this.handleTouchMove);
+        this.canvas.removeEventListener('touchend', this.handleTouchEnd);
+        this.canvas.removeEventListener('touchcancel', this.handleTouchCancel);
+        
+        if (!MobileUtils.isMobile) {
+            this.canvas.removeEventListener('mousedown', this.handleMouseDown);
+            this.canvas.removeEventListener('mousemove', this.handleMouseMove);
+            this.canvas.removeEventListener('mouseup', this.handleMouseUp);
+        }
+        
+        // Clear any pending timeouts
+        if (this.tapTimeout) {
+            clearTimeout(this.tapTimeout);
+        }
+        
+        // Clear all touch data
+        this.touches.forEach(touchData => {
+            if (touchData.longPressTimer) {
+                clearTimeout(touchData.longPressTimer);
+            }
+        });
+        this.touches.clear();
+    }
+}
