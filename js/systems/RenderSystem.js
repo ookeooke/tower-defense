@@ -1,3 +1,4 @@
+// js/systems/RenderSystem.js
 import { gameConfig } from '../config/gameConfig.js';
 
 export class RenderSystem {
@@ -11,7 +12,8 @@ export class RenderSystem {
     }
     
     drawPath() {
-        const path = gameConfig.path;
+        // Get the current path (from current map or default)
+        const path = window.currentMap?.paths[0] || gameConfig.path;
         
         // Draw main path
         this.ctx.strokeStyle = '#374151';

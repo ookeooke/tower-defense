@@ -27,29 +27,38 @@ export class Enemy {
         this.color = enemyType.color;
         this.size = enemyType.size;
         this.pathIndex = pathIndex;
-        this.x = gameConfig.path[0].x;
-        this.y = gameConfig.path[0].y;
+        
+        // Get the current path (from current map or default)
+        this.currentPath = window.currentMap?.paths[0] || gameConfig.path;
+        
+        this.x = this.currentPath[0].x;
+        this.y = this.currentPath[0].y;
         this.slowUntil = 0;
     }
     
     update() {
         const currentSpeed = Date.now() < this.slowUntil ? this.speed * 0.3 : this.speed;
         
-        if (this.pathIndex < gameConfig.path.length - 1) {
-            const target = gameConfig.path[this.pathIndex + 1];
+        if (this.pathIndex < this.currentPath.length - 1) {
+            const target = this.currentPath[this.pathIndex + 1];
             const dx = target.x - this.x;
             const dy = target.y - this.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
             
             if (distance < 5) {
                 this.pathIndex++;
+                
+                // Check if enemy reached the end
+                if (this.pathIndex >= this.currentPath.length - 1) {
+                    return true; // Enemy reached the end
+                }
             } else {
                 this.x += (dx / distance) * currentSpeed;
                 this.y += (dy / distance) * currentSpeed;
             }
         }
         
-        return this.pathIndex >= gameConfig.path.length - 1;
+        return false; // Enemy has not reached the end yet
     }
     
     draw(ctx) {
