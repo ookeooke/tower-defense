@@ -1,7 +1,6 @@
 // js/systems/GameState.js
-// js/systems/GameState.js - Save this to replace your existing GameState.js file
 import { gameConfig } from '../config/gameConfig.js';
-import { Hero } from '../entities/Hero.js';  // Add this import
+import { Hero } from '../entities/Hero.js';
 
 export class GameState {
     constructor() {
@@ -48,13 +47,8 @@ export class GameState {
         // Initialize hero at spawn point
         this.hero = new Hero(100, 300, 'warrior');
         
-        // Show build phase overlay
-        const overlay = document.getElementById('pauseOverlay');
+        // Set up pause button for build phase without showing overlay
         const pauseBtn = document.getElementById('pauseBtn');
-        const pauseMessage = document.getElementById('pauseMessage');
-        
-        overlay.style.display = 'flex';
-        pauseMessage.innerHTML = '<h2>PREPARE YOUR DEFENSES!</h2><p style="margin-top:10px; font-size: 16px;">Place towers and position your hero</p><p style="margin-top:10px; color: #64748b;">Press ▶️ or SPACE to begin</p>';
         pauseBtn.textContent = '▶️';
         pauseBtn.classList.add('active');
         
@@ -167,27 +161,27 @@ export class GameState {
     }
     
     isValidTowerPosition(x, y) {
-    // Use the current map's path if available
-    const currentPath = window.currentMap ? window.currentMap.paths[0] : gameConfig.path;
-    
-    // Check distance from path
-    for (let point of currentPath) {
-        const distance = Math.sqrt((point.x - x) ** 2 + (point.y - y) ** 2);
-        if (distance < gameConfig.towers.minPlacementDistance) {
-            return false;
+        // Use the current map's path if available
+        const currentPath = window.currentMap ? window.currentMap.paths[0] : gameConfig.path;
+        
+        // Check distance from path
+        for (let point of currentPath) {
+            const distance = Math.sqrt((point.x - x) ** 2 + (point.y - y) ** 2);
+            if (distance < gameConfig.towers.minPlacementDistance) {
+                return false;
+            }
         }
-    }
-    
-    // Check distance from other towers
-    for (let tower of this.towers) {
-        const distance = Math.sqrt((tower.x - x) ** 2 + (tower.y - y) ** 2);
-        if (distance < gameConfig.towers.minTowerDistance) {
-            return false;
+        
+        // Check distance from other towers
+        for (let tower of this.towers) {
+            const distance = Math.sqrt((tower.x - x) ** 2 + (tower.y - y) ** 2);
+            if (distance < gameConfig.towers.minTowerDistance) {
+                return false;
+            }
         }
+        
+        return true;
     }
-    
-    return true;
-}
     
     showVictory() {
         document.getElementById('victoryScore').textContent = this.score;
