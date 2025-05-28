@@ -39,9 +39,6 @@ function resizeCanvas() {
     
     canvas.style.width = (canvas.width * scale) + 'px';
     canvas.style.height = (canvas.height * scale) + 'px';
-    function showGameHUD() {
-    document.getElementById('towers').classList.remove('hide');
-    document.getElementById('gameControls').classList.remove('hide');
 }
 
 function showGameHUD() {
@@ -56,29 +53,27 @@ function hideGameHUD() {
 
 function hideAllScreens() {
     const screens = [
-        '#mainMenu',
-        '#heroSelect',
-        '#worldMap',
-        '#instructions',
-        '#shopScreen',
-        '#achievementsScreen',
-        '#dailyChallengeScreen',
-        '#mapSelect',
-        '#gameOver',
-        '#victory'
+        'mainMenu',
+        'heroSelect',
+        'worldMap',
+        'instructions',
+        'shopScreen',
+        'achievementsScreen',
+        'dailyChallengeScreen',
+        'mapSelect',
+        'gameOver',
+        'victory'
     ];
     
-    screens.forEach(screen => {
-        const element = document.querySelector(screen);
+    screens.forEach(screenId => {
+        const element = document.getElementById(screenId);
         if (element) {
             element.classList.add('hide');
-            element.style.display = 'none';
+            element.style.display = '';  // Reset display property
         }
     });
     
     hideGameHUD();
-}
-
 }
 
 // Handle window resize
@@ -391,7 +386,6 @@ document.addEventListener('keydown', (e) => {
 // Menu functions
 window.showHeroSelect = function() {
     hideAllScreens();
-    document.getElementById('mainMenu').style.display = 'none';
     document.getElementById('heroSelect').classList.remove('hide');
     
     // Update hero levels from save data
@@ -400,19 +394,18 @@ window.showHeroSelect = function() {
 };
 
 window.backToMainMenu = function() {
-    document.getElementById('heroSelect').classList.add('hide');
-    document.getElementById('mapSelect').classList.add('hide');
-    document.getElementById('mainMenu').style.display = 'block';
+    hideAllScreens();
+    document.getElementById('mainMenu').classList.remove('hide');
 };
 
 window.showMapSelect = function() {
-    document.getElementById('heroSelect').classList.add('hide');
+    hideAllScreens();
     // Show world map instead of old map select
     worldMap.show();
 };
 
 window.backToHeroSelect = function() {
-    document.getElementById('mapSelect').classList.add('hide');
+    hideAllScreens();
     worldMap.hide();
     document.getElementById('heroSelect').classList.remove('hide');
 };
@@ -509,14 +502,12 @@ window.startNewGame = function() {
 
 window.showInstructions = function() {
     hideAllScreens();
-    document.getElementById('mainMenu').style.display = 'none';
     document.getElementById('instructions').classList.remove('hide');
-    document.getElementById('instructions').style.display = 'block';
 };
 
 window.hideInstructions = function() {
-    document.getElementById('instructions').style.display = 'none';
-    document.getElementById('mainMenu').style.display = 'block';
+    hideAllScreens();
+    document.getElementById('mainMenu').classList.remove('hide');
 };
 
 window.backToMenu = function() {
@@ -526,8 +517,7 @@ window.backToMenu = function() {
     
     // Hide game and show world map
     canvas.style.display = 'none';
-    document.getElementById('gameControls').style.display = 'none';
-    hideGameHUD(); // ADD THIS LINE
+    hideGameHUD();
     worldMap.show();
     loadBestScore();
 };
