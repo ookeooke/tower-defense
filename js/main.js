@@ -60,9 +60,8 @@ function hideAllScreens() {
         'shopScreen',
         'achievementsScreen',
         'dailyChallengeScreen',
-        'mapSelect',
-        'gameOver',
-        'victory'
+        'mapSelect'
+        // Removed 'gameOver' and 'victory' - they should be managed separately
     ];
     
     screens.forEach(screenId => {
@@ -75,7 +74,6 @@ function hideAllScreens() {
     
     hideGameHUD();
 }
-
 // Handle window resize
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
