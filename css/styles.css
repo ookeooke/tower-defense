@@ -148,7 +148,7 @@ body.paused #gameCanvas {
     transition: filter 0.3s ease;
 }
 #towers {
-    position: absolute;
+    position: fixed;
     bottom: 10px;
     left: 10px;
     right: 10px;
@@ -156,8 +156,12 @@ body.paused #gameCanvas {
     gap: 5px;
     justify-content: center;
     flex-wrap: wrap;
-    z-index: 10;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    border-radius: 10px;
 }
+
 
 #towerInfo {
     position: absolute;
@@ -210,16 +214,15 @@ body.paused #gameCanvas {
 }
 
 .tower-btn {
-    background: linear-gradient(45deg, #0f3460, #16213e);
+    background: #0f3460;
     border: 2px solid #0ea5e9;
-    color: #fff;
+    color: white;
     padding: 8px 10px;
     border-radius: 8px;
     cursor: pointer;
-    font-family: inherit;
-    font-size: clamp(10px, 1.5vw, 12px);
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
     font-weight: bold;
-    transition: all 0.3s;
     min-width: 70px;
     text-align: center;
     flex: 1;
@@ -227,14 +230,12 @@ body.paused #gameCanvas {
 }
 
 .tower-btn:hover {
-    background: linear-gradient(45deg, #16213e, #0f3460);
+    background: #16213e;
     border-color: #38bdf8;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(14, 165, 233, 0.3);
 }
 
 .tower-btn.selected {
-    background: linear-gradient(45deg, #0ea5e9, #38bdf8);
+    background: #0ea5e9;
     border-color: #7dd3fc;
 }
 
@@ -760,18 +761,6 @@ body.paused #gameCanvas {
         width: 50px;
         height: 50px;
         font-size: 20px;
-    }
-    
-   #towers {
-    display: flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    }
-
-    .tower-btn {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
     }
     
     #towerInfo {
