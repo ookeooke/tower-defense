@@ -39,6 +39,46 @@ function resizeCanvas() {
     
     canvas.style.width = (canvas.width * scale) + 'px';
     canvas.style.height = (canvas.height * scale) + 'px';
+    function showGameHUD() {
+    document.getElementById('towers').classList.remove('hide');
+    document.getElementById('gameControls').classList.remove('hide');
+}
+
+function showGameHUD() {
+    document.getElementById('towers').classList.remove('hide');
+    document.getElementById('gameControls').classList.remove('hide');
+}
+
+function hideGameHUD() {
+    document.getElementById('towers').classList.add('hide');
+    document.getElementById('gameControls').classList.add('hide');
+}
+
+function hideAllScreens() {
+    const screens = [
+        '#mainMenu',
+        '#heroSelect',
+        '#worldMap',
+        '#instructions',
+        '#shopScreen',
+        '#achievementsScreen',
+        '#dailyChallengeScreen',
+        '#mapSelect',
+        '#gameOver',
+        '#victory'
+    ];
+    
+    screens.forEach(screen => {
+        const element = document.querySelector(screen);
+        if (element) {
+            element.classList.add('hide');
+            element.style.display = 'none';
+        }
+    });
+    
+    hideGameHUD();
+}
+
 }
 
 // Handle window resize
@@ -145,25 +185,10 @@ function updateGame() {
         }
     }
     
+    // Update hero
     if (gameState.hero && !gameState.hero.isDead) {
-    const heroDistance = Math.hypot(gameState.hero.x - x, gameState.hero.y - y);
-    if (heroDistance < 20) {
-        // Hero is selected, next click will move hero
-        gameState.selectedHero = true;
-        gameState.selectedTower = null;
-        gameState.selectedTowerObj = null;
-        document.querySelectorAll('.tower-btn').forEach(b => b.classList.remove('selected'));
-        document.getElementById('towerInfo').style.display = 'none';
-        return;
+        gameState.hero.update(gameState.enemies);
     }
-}
-
-// If hero is selected, move hero to clicked position
-if (gameState.selectedHero) {
-    gameState.hero.setTarget(x, y);
-    gameState.selectedHero = false;
-    return;
-}
     
     // Update towers
     gameState.towers.forEach(tower => {
@@ -228,6 +253,27 @@ function handleCanvasInteraction(e) {
     // Calculate actual position considering scale
     const x = (clientX - rect.left) * scaleX;
     const y = (clientY - rect.top) * scaleY;
+    
+    // Check if clicking on hero first
+    if (gameState.hero && !gameState.hero.isDead) {
+        const heroDistance = Math.hypot(gameState.hero.x - x, gameState.hero.y - y);
+        if (heroDistance < 20) {
+            // Hero is selected, next click will move hero
+            gameState.selectedHero = true;
+            gameState.selectedTower = null;
+            gameState.selectedTowerObj = null;
+            document.querySelectorAll('.tower-btn').forEach(b => b.classList.remove('selected'));
+            document.getElementById('towerInfo').style.display = 'none';
+            return;
+        }
+    }
+    
+    // If hero is selected, move hero to clicked position
+    if (gameState.selectedHero) {
+        gameState.hero.setTarget(x, y);
+        gameState.selectedHero = false;
+        return;
+    }
     
     // Check if clicking on existing tower
     for (const tower of gameState.towers) {
@@ -344,6 +390,7 @@ document.addEventListener('keydown', (e) => {
 
 // Menu functions
 window.showHeroSelect = function() {
+    hideAllScreens();
     document.getElementById('mainMenu').style.display = 'none';
     document.getElementById('heroSelect').classList.remove('hide');
     
@@ -434,6 +481,7 @@ window.startGameWithMap = function() {
     // Show game
     canvas.style.display = 'block';
     document.getElementById('gameControls').style.display = 'flex';
+    showGameHUD(); // ADD THIS LINE
     resizeCanvas();
     
     // Reset speed button
@@ -460,6 +508,7 @@ window.startNewGame = function() {
 };
 
 window.showInstructions = function() {
+    hideAllScreens();
     document.getElementById('mainMenu').style.display = 'none';
     document.getElementById('instructions').classList.remove('hide');
     document.getElementById('instructions').style.display = 'block';
@@ -478,12 +527,14 @@ window.backToMenu = function() {
     // Hide game and show world map
     canvas.style.display = 'none';
     document.getElementById('gameControls').style.display = 'none';
+    hideGameHUD(); // ADD THIS LINE
     worldMap.show();
     loadBestScore();
 };
 
 // Shop, Achievements, and Daily Challenge functions
 window.showShop = function() {
+    hideAllScreens();
     worldMap.hide();
     document.getElementById('shopScreen').classList.remove('hide');
 };
@@ -494,6 +545,7 @@ window.hideShop = function() {
 };
 
 window.showAchievements = function() {
+    hideAllScreens();
     worldMap.hide();
     document.getElementById('achievementsScreen').classList.remove('hide');
 };
@@ -504,6 +556,7 @@ window.hideAchievements = function() {
 };
 
 window.showDailyChallenge = function() {
+    hideAllScreens();
     worldMap.hide();
     document.getElementById('dailyChallengeScreen').classList.remove('hide');
 };

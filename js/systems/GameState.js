@@ -167,24 +167,27 @@ export class GameState {
     }
     
     isValidTowerPosition(x, y) {
-        // Check distance from path
-        for (let point of gameConfig.path) {
-            const distance = Math.sqrt((point.x - x) ** 2 + (point.y - y) ** 2);
-            if (distance < gameConfig.towers.minPlacementDistance) {
-                return false;
-            }
+    // Use the current map's path if available
+    const currentPath = window.currentMap ? window.currentMap.paths[0] : gameConfig.path;
+    
+    // Check distance from path
+    for (let point of currentPath) {
+        const distance = Math.sqrt((point.x - x) ** 2 + (point.y - y) ** 2);
+        if (distance < gameConfig.towers.minPlacementDistance) {
+            return false;
         }
-        
-        // Check distance from other towers
-        for (let tower of this.towers) {
-            const distance = Math.sqrt((tower.x - x) ** 2 + (tower.y - y) ** 2);
-            if (distance < gameConfig.towers.minTowerDistance) {
-                return false;
-            }
-        }
-        
-        return true;
     }
+    
+    // Check distance from other towers
+    for (let tower of this.towers) {
+        const distance = Math.sqrt((tower.x - x) ** 2 + (tower.y - y) ** 2);
+        if (distance < gameConfig.towers.minTowerDistance) {
+            return false;
+        }
+    }
+    
+    return true;
+}
     
     showVictory() {
         document.getElementById('victoryScore').textContent = this.score;

@@ -135,32 +135,9 @@
                     <li>🔷 Ice - Slows enemies</li>
                 </ul>
             </div>
-            <button class="menu-btn" onclick="hideInstructions()">Back to Menu</button>
-        </div><p><strong>Controls:</strong></p>
-                <ul>
-                    <li>Click ▶️ to start/pause the game</li>
-                    <li>Click a tower button to select it</li>
-                    <li>Click on the map to place the tower</li>
-                    <li>Click on a tower to upgrade or sell it</li>
-                    <li>Click on hero to select, then click to move</li>
-                    <li>Use WASD or Arrow keys to move hero</li>
-                    <li>Press SPACE to pause/unpause</li>
-                </ul>
-                <br>
-                <p><strong>Tower Types:</strong></p>
-                <ul>
-                    <li>🔵 Basic - Balanced stats</li>
-                    <li>🟣 Sniper - Long range, slow fire</li>
-                    <li>🟠 Cannon - Area damage</li>
-                    <li>🔷 Ice - Slows enemies</li>
-                </ul>
-                <br>
-                <p><strong>Hero:</strong></p>
-                <ul>
-                    <li>⚔️ Warrior - High HP, melee attack</li>
-                    <li>Blocks enemy path when positioned</li>
-                    <li>Auto-attacks nearby enemies</li>
-                </ul>
+           <button class="menu-btn" onclick="hideInstructions()">Back to Menu</button>
+        </div>
+        
         <div id="ui">
             <div style="text-align: left;">
                 <div>💰 <span id="gold">100</span></div>
@@ -176,8 +153,8 @@
             </div>
         </div>
         
-        <div id="gameControls">
-            <button id="pauseBtn" class="control-btn" title="Play/Pause (SPACE)">⏸️</button>
+    <div id="gameControls" class="hide">
+                <button id="pauseBtn" class="control-btn" title="Play/Pause (SPACE)">⏸️</button>
             <button id="speedBtn" class="control-btn" title="Game Speed (F)">⏩</button>
         </div>
         
@@ -197,7 +174,7 @@
             <button id="sellBtn">Sell (💰15)</button>
         </div>
         
-        <div id="towers">
+        <div id="towers" class="hide">
             <button class="tower-btn" data-tower="basic">
                 <div>Basic</div>
                 <div style="font-size: 0.9em;">💰25</div>
