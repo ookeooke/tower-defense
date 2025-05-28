@@ -201,16 +201,17 @@
             <h2>Game Over!</h2>
             <p>Your defenses have been overrun!</p>
             <p>Final Score: <span id="finalScore">0</span></p>
-            <button class="restart-btn" onclick="restartGame()">Play Again</button>
-            <button class="restart-btn" onclick="backToMenu()">Main Menu</button>
+            <button class="restart-btn" onclick="retryLevel()">Retry Level</button>
+            <button class="restart-btn" onclick="backToMenu()">World Map</button>
         </div>
         
         <div id="victory">
             <h2>Victory!</h2>
             <p>You've successfully defended your base!</p>
             <p>Final Score: <span id="victoryScore">0</span></p>
-            <button class="restart-btn" onclick="restartGame()">Play Again</button>
-            <button class="restart-btn" onclick="backToMenu()">Main Menu</button>
+            <p style="color: #22c55e;">⭐ <span id="victoryStars">0</span> Stars Earned</p>
+            <button class="restart-btn" onclick="retryLevel()">Play Again</button>
+            <button class="restart-btn" onclick="backToMenu()">World Map</button>
         </div>
     </div>
 

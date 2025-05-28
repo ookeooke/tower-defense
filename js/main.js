@@ -341,13 +341,32 @@ document.getElementById('respawnHero').addEventListener('click', () => {
     }
 });
 
-// Restart function
-window.restartGame = function() {
+// Retry level function
+window.retryLevel = function() {
+    // Hide game over screen
+    document.getElementById('gameOver').style.display = 'none';
+    
+    // Reset the game state but keep the same map
     gameState.reset();
     gameState.hideScreens();
+    
+    // Apply map-specific settings again
+    if (window.currentMap) {
+        gameState.gold = window.currentMap.startingGold;
+        gameState.lives = window.currentMap.startingLives;
+        gameState.maxWave = window.currentMap.waves;
+        gameConfig.path = window.currentMap.paths[0];
+    }
+    
+    // Restart the game loop
     lastTime = performance.now();
     accumulator = 0;
     requestAnimationFrame(gameLoop);
+};
+
+// Restart function (for victory screen)
+window.restartGame = function() {
+    retryLevel(); // Just use the same retry logic
 };
 
 // Pause button

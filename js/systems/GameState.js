@@ -185,6 +185,11 @@ export class GameState {
     
     showVictory() {
         document.getElementById('victoryScore').textContent = this.score;
+        
+        // Calculate and display stars
+        const stars = this.lives >= 18 ? 3 : this.lives >= 10 ? 2 : 1;
+        document.getElementById('victoryStars').textContent = stars;
+        
         document.getElementById('victory').style.display = 'block';
         this.gameRunning = false;
         
